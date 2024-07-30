@@ -98,7 +98,7 @@ fun HomeScreen(navController: NavController, viewModel: HomeViewModel) {
                     message = "${stringResource(id = R.string.error_text_message)} ${
                         if (BuildConfig.TOKEN.isEmpty()) stringResource(
                             id = R.string.check_the_token_text
-                        ) else TODO()
+                        ) else ""
                     }"
                 )
             }
