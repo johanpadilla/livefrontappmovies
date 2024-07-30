@@ -15,7 +15,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class DetailViewModel @Inject constructor(private val movieService: MovieService) : ViewModel() {
+class MovieDetailViewModel @Inject constructor(private val movieService: MovieService) : ViewModel() {
     private val _details = MutableStateFlow<MovieDetailState>(MovieDetailState.Empty)
     val detail: StateFlow<MovieDetailState> = _details.asStateFlow()
 

@@ -41,7 +41,7 @@ import kotlinx.serialization.Serializable
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MovieDetailScreen(navController: NavController, movieId: String?, viewModel: DetailViewModel) {
+fun MovieDetailScreen(navController: NavController, movieId: String?, viewModel: MovieDetailViewModel) {
     viewModel.getMovieDetail(movieId)
     val uiState = viewModel.detail.collectAsState().value
     Scaffold(
