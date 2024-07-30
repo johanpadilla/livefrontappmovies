@@ -21,6 +21,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import com.example.livefront_app_movies.BuildConfig
 import com.example.livefront_app_movies.R
 import com.example.livefront_app_movies.ui.details.MovieDetailsScreen
 import com.example.livefront_app_movies.ui.util.CenteredMessage
@@ -90,9 +91,16 @@ fun HomeScreen(navController: NavController, viewModel: HomeViewModel) {
                         }
                     }
                 }
+
                 is HomeState.Loading -> CenteredMessage(message = stringResource(id = R.string.loading_text_message))
                 is HomeState.Empty -> CenteredMessage(message = stringResource(id = R.string.empty_text_message))
-                is HomeState.Error -> CenteredMessage(message = stringResource(id = R.string.error_text_message))
+                is HomeState.Error -> CenteredMessage(
+                    message = "${stringResource(id = R.string.error_text_message)} ${
+                        if (BuildConfig.TOKEN.isEmpty()) stringResource(
+                            id = R.string.check_the_token_text
+                        ) else TODO()
+                    }"
+                )
             }
         }
     }

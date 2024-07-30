@@ -6,6 +6,7 @@
 
     <string name="empty_text_message">No results. Please try again</string>
     <string name="error_text_message">A Network error occurred, Please check your internet connection and try again.</string>
+    <string name="check_the_token_text">Check the read-only access token in the local.properties file</string>
     <string name="loading_text_message">Loading…</string>
 
     <string name="go_back_accessibility">Go back</string>
