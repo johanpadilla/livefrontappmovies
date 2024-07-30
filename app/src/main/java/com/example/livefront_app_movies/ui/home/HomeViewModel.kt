@@ -1,6 +1,5 @@
 package com.example.livefront_app_movies.ui.home
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.livefront_app_movies.model.PopularMovieResponse
@@ -17,7 +16,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(private val movieService: MovieService) : ViewModel() {
-    private val _movies = MutableStateFlow<HomeState>(HomeState.Empty)
+    private val _movies = MutableStateFlow<HomeState>(HomeState.Loading)
     val movies: StateFlow<HomeState> = _movies.asStateFlow()
 
     init {

@@ -1,8 +1,10 @@
 package com.example.livefront_app_movies.ui.home
 
 import com.example.livefront_app_movies.model.Results
+import com.example.livefront_app_movies.utils.toFullPosterURL
 
 sealed class HomeState {
+    data object Loading : HomeState()
     data class Loaded(
         val currentPage: Int?,
         val totalPages: Int?,
@@ -38,5 +40,3 @@ fun Results.toPopularMovie() = PopularMovie(
     voteCount = this.voteCount,
     fullPosterUrl = this.posterPath?.toFullPosterURL()
 )
-
-fun String.toFullPosterURL() = "https://image.tmdb.org/t/p/w500/$this"

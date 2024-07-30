@@ -1,7 +1,19 @@
 <resources>
     <string name="app_name">livefront-app-movies</string>
+
     <string name="home_screen_title">Popular Movies</string>
+    <string name="movie_details_screen_title">Movie Details</string>
 
     <string name="empty_text_message">No results. Please try again</string>
     <string name="error_text_message">A Network error occurred, Please check your internet connection and try again.</string>
+    <string name="loading_text_message">Loading…</string>
+
+    <string name="go_back_accessibility">Go back</string>
+    <string name="synopsis_text">Synopsis: </string>
+    <string name="budget_text">Budget</string>
+    <string name="status_text">Status</string>
+    <string name="available_language_text">Available languages</string>
+    <string name="production_countries_text">Production countries</string>
+    <string name="production_companies_text">Production companies</string>
+    <string name="bullet">•</string>
 </resources>

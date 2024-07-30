@@ -2,7 +2,6 @@ package com.example.livefront_app_movies.ui.home
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -24,6 +23,7 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.livefront_app_movies.R
 import com.example.livefront_app_movies.ui.details.MovieDetailsScreen
+import com.example.livefront_app_movies.ui.util.CenteredMessage
 import kotlinx.serialization.Serializable
 
 const val POPULAR_MOVIE_COLUMNS = 2
@@ -32,7 +32,6 @@ const val POPULAR_MOVIE_COLUMNS = 2
 @Composable
 fun HomeScreen(navController: NavController, viewModel: HomeViewModel) {
     val moviesState = viewModel.movies.collectAsState().value
-
     Scaffold(
         topBar = {
             TopAppBar(
@@ -67,14 +66,14 @@ fun HomeScreen(navController: NavController, viewModel: HomeViewModel) {
                                         popularMovie = chunkedList[index][0],
                                         onPopularMovieClick = {
                                             navController.navigate(
-                                                MovieDetailsScreen(moviesState.movies[index].id.toString())
+                                                MovieDetailsScreen(chunkedList[index][0].id.toString())
                                             )
                                         })
                                     MovieCard(
                                         popularMovie = chunkedList[index][1],
                                         onPopularMovieClick = {
                                             navController.navigate(
-                                                MovieDetailsScreen(moviesState.movies[index].id.toString())
+                                                MovieDetailsScreen(chunkedList[index][1].id.toString())
                                             )
                                         })
                                 }
@@ -84,19 +83,17 @@ fun HomeScreen(navController: NavController, viewModel: HomeViewModel) {
                                     popularMovie = chunkedList[index][0],
                                     onPopularMovieClick = {
                                         navController.navigate(
-                                            MovieDetailsScreen(moviesState.movies[index].id.toString())
+                                            MovieDetailsScreen(chunkedList[index][0].id.toString())
                                         )
                                     })
                             }
-
                         }
                     }
                 }
-
-                is HomeState.Empty -> Message(message = stringResource(id = R.string.empty_text_message))
-                is HomeState.Error -> Message(message = stringResource(id = R.string.error_text_message))
+                is HomeState.Loading -> CenteredMessage(message = stringResource(id = R.string.loading_text_message))
+                is HomeState.Empty -> CenteredMessage(message = stringResource(id = R.string.empty_text_message))
+                is HomeState.Error -> CenteredMessage(message = stringResource(id = R.string.error_text_message))
             }
-
         }
     }
 }
@@ -110,17 +107,6 @@ private fun MovieCard(popularMovie: PopularMovie, onPopularMovieClick: () -> Uni
                 .build(),
             contentDescription = null,
         )
-    }
-}
-
-@Composable
-private fun Message(message: String) {
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Text(text = message)
     }
 }
 
