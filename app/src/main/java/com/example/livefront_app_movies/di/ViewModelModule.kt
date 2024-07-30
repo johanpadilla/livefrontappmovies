@@ -1,6 +1,6 @@
 package com.example.livefront_app_movies.di
 
-import com.example.livefront_app_movies.network.MovieService
+import com.example.livefront_app_movies.network.movie.MovieService
 import com.example.livefront_app_movies.ui.home.HomeViewModel
 import dagger.Module
 import dagger.Provides

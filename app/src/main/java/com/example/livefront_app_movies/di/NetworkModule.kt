@@ -1,6 +1,6 @@
 package com.example.livefront_app_movies.di
 
-import com.example.livefront_app_movies.network.MovieService
+import com.example.livefront_app_movies.network.movie.MovieService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -36,6 +36,7 @@ class NetworkModule {
         .build()
 
     @Provides
-    fun provideMovieService(retrofit: Retrofit) = retrofit.create(MovieService::class.java)
+    fun provideMovieService(retrofit: Retrofit): MovieService =
+        retrofit.create(MovieService::class.java)
 
-   }
+}

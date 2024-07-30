@@ -3,9 +3,9 @@ package com.example.livefront_app_movies.ui.details
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.livefront_app_movies.model.MovieDetailResponse
-import com.example.livefront_app_movies.network.MovieService
+import com.example.livefront_app_movies.network.movie.MovieService
 import com.example.livefront_app_movies.network.NetworkResponse
-import com.example.livefront_app_movies.network.performApiCall
+import com.example.livefront_app_movies.network.utils.performApiCall
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow

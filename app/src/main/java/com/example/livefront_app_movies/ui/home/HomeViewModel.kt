@@ -4,9 +4,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.livefront_app_movies.di.IoDispatcher
 import com.example.livefront_app_movies.model.PopularMovieResponse
-import com.example.livefront_app_movies.network.MovieService
+import com.example.livefront_app_movies.network.movie.MovieService
 import com.example.livefront_app_movies.network.NetworkResponse
-import com.example.livefront_app_movies.network.performApiCall
+import com.example.livefront_app_movies.network.utils.performApiCall
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

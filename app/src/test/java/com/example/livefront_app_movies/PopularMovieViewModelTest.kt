@@ -3,7 +3,7 @@ package com.example.livefront_app_movies
 import com.example.livefront_app_movies.model.PopularMovieResponse
 import com.example.livefront_app_movies.model.PopularMovieResponseJsonAdapter
 import com.example.livefront_app_movies.model.Results
-import com.example.livefront_app_movies.network.MovieService
+import com.example.livefront_app_movies.network.movie.MovieService
 import com.example.livefront_app_movies.ui.home.HomeState
 import com.example.livefront_app_movies.ui.home.HomeViewModel
 import com.squareup.moshi.Moshi

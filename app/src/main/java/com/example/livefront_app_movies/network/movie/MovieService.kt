@@ -1,4 +1,4 @@
-package com.example.livefront_app_movies.network
+package com.example.livefront_app_movies.network.movie
 
 import com.example.livefront_app_movies.model.MovieDetailResponse
 import com.example.livefront_app_movies.model.PopularMovieResponse
