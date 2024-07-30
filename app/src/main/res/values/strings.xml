@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">livefront-app-movies</string>
+    <string name="home_screen_title">Popular Movies</string>
+
+    <string name="empty_text_message">No results. Please try again</string>
+    <string name="error_text_message">A Network error occurred, Please check your internet connection and try again.</string>
 </resources>
