@@ -2,39 +2,45 @@ package com.example.livefront_app_movies.ui.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.livefront_app_movies.di.IoDispatcher
 import com.example.livefront_app_movies.model.PopularMovieResponse
 import com.example.livefront_app_movies.network.MovieService
 import com.example.livefront_app_movies.network.NetworkResponse
 import com.example.livefront_app_movies.network.performApiCall
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.coroutines.CoroutineContext
 
 @HiltViewModel
-class HomeViewModel @Inject constructor(private val movieService: MovieService) : ViewModel() {
+class HomeViewModel @Inject constructor(
+    private val movieService: MovieService,
+    @IoDispatcher private val ioDispatcher: CoroutineContext
+) : ViewModel() {
     private val _movies = MutableStateFlow<HomeState>(HomeState.Loading)
     val movies: StateFlow<HomeState> = _movies.asStateFlow()
 
     init {
-        getMovies(1)
+        viewModelScope.launch(ioDispatcher) {
+            getMovies(1)
+        }
+
     }
 
-    fun getMovies(page: Int = 1) {
-        viewModelScope.launch(Dispatchers.IO) {
-            val response = performApiCall(Dispatchers.IO) {
-                movieService.getPopularMovies(
-                    mutableMapOf(
-                        "language" to "en-US",
-                        "page" to page.toString()
-                    )
+    suspend fun getMovies(page: Int = 1) {
+        val response = performApiCall(ioDispatcher) {
+            movieService.getPopularMovies(
+                mutableMapOf(
+                    "language" to "en-US",
+                    "page" to page.toString()
                 )
-            }
-            _movies.value = getStateFromResponse(response)
+            )
         }
+        _movies.value = getStateFromResponse(response)
+
     }
 
     private fun getStateFromResponse(moviesResponse: NetworkResponse<PopularMovieResponse>): HomeState {

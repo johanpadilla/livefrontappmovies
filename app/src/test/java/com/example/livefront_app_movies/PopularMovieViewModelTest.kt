@@ -7,10 +7,12 @@ import com.example.livefront_app_movies.network.MovieService
 import com.example.livefront_app_movies.ui.home.HomeState
 import com.example.livefront_app_movies.ui.home.HomeViewModel
 import com.squareup.moshi.Moshi
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.UnconfinedTestDispatcher
-import kotlinx.coroutines.test.advanceUntilIdle
+import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.test.setMain
 import okhttp3.OkHttpClient
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
@@ -22,15 +24,17 @@ import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 
 class PopularMovieViewModelTest {
-    private lateinit var  remoteSource: MovieService
-
-    private lateinit var subject: HomeViewModel
+    private lateinit var remoteSource: MovieService
 
     private lateinit var mockWebServer: MockWebServer
     private lateinit var moshi: Moshi
 
+    private val dispatchers = StandardTestDispatcher()
+
+    @OptIn(ExperimentalCoroutinesApi::class)
     @Before
     fun setup() {
+        Dispatchers.setMain(dispatchers)
         mockWebServer = MockWebServer()
         mockWebServer.start()
         remoteSource = Retrofit.Builder()
@@ -38,56 +42,59 @@ class PopularMovieViewModelTest {
             .addConverterFactory(MoshiConverterFactory.create())
             .client(OkHttpClient())
             .build().create(MovieService::class.java)
-        subject = HomeViewModel(remoteSource)
+
         moshi = Moshi.Builder().build()
 
     }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     @After
     fun teardown() {
         mockWebServer.shutdown()
+        Dispatchers.resetMain()
     }
 
     @Test
-    fun testSuccessResponseWithEmptyBody() = runTest{
+    fun testSuccessResponseWithEmptyBody() = runTest(dispatchers) {
+        val subject = HomeViewModel(remoteSource, dispatchers)
         val response = MockResponse()
             .setResponseCode(200)
             .setBody(PopularMovieResponseJsonAdapter(moshi).toJson(PopularMovieResponse()))
         mockWebServer.enqueue(response)
-
         subject.getMovies(anyInt())
 
-        println(subject.movies.value)
         assert(subject.movies.value is HomeState.Empty)
     }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     @Test
-    fun testErrorNetworkError() = runTest{
+    fun testErrorNetworkError() = runTest(dispatchers) {
+        val subject = HomeViewModel(remoteSource, dispatchers)
+
         val response = MockResponse()
             .setResponseCode(400)
             .setBody(PopularMovieResponseJsonAdapter(moshi).toJson(PopularMovieResponse()))
         mockWebServer.enqueue(response)
-
         subject.getMovies(anyInt())
-        advanceUntilIdle()
-        println(subject.movies.value)
         assert(subject.movies.value is HomeState.Error)
 
     }
 
     @Test
-    fun testSuccessNetworkLoadedState() = runTest{
+    fun testSuccessNetworkLoadedState() = runTest(dispatchers) {
+        val subject = HomeViewModel(remoteSource, dispatchers)
         val response = MockResponse()
             .setResponseCode(200)
-            .setBody(PopularMovieResponseJsonAdapter(moshi).toJson(PopularMovieResponse(results = listOf(
-                Results()
-            ))))
+            .setBody(
+                PopularMovieResponseJsonAdapter(moshi).toJson(
+                    PopularMovieResponse(
+                        results = listOf(
+                            Results()
+                        )
+                    )
+                )
+            )
         mockWebServer.enqueue(response)
-
         subject.getMovies(anyInt())
-        println(subject.movies.value)
         assert(subject.movies.value is HomeState.Loaded)
-
     }
 }

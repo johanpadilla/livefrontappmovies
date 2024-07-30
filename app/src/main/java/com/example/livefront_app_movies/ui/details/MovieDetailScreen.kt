@@ -41,7 +41,11 @@ import kotlinx.serialization.Serializable
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MovieDetailScreen(navController: NavController, movieId: String?, viewModel: MovieDetailViewModel) {
+fun MovieDetailScreen(
+    navController: NavController,
+    movieId: String?,
+    viewModel: MovieDetailViewModel
+) {
     viewModel.getMovieDetail(movieId)
     val uiState = viewModel.detail.collectAsState().value
     Scaffold(
@@ -112,7 +116,9 @@ fun MovieDetailScreen(navController: NavController, movieId: String?, viewModel:
                     }
 
                     uiState.movieDetail?.productionCompanies?.let { companies ->
-                        ProductionCompany(companies = companies)
+
+                        if (companies.any { it.logoPath != null }) ProductionCompany(companies = companies)
+
                     }
 
                     uiState.movieDetail?.productionCountries?.let { countries ->
@@ -121,6 +127,7 @@ fun MovieDetailScreen(navController: NavController, movieId: String?, viewModel:
                 }
             }
 
+            is MovieDetailState.Loading -> CenteredMessage(message = stringResource(id = R.string.loading_text_message))
             is MovieDetailState.Empty -> CenteredMessage(message = stringResource(id = R.string.empty_text_message))
             is MovieDetailState.Error -> CenteredMessage(message = stringResource(id = R.string.error_text_message))
         }
@@ -152,7 +159,7 @@ private fun ProductionCountry(countries: List<ProductionCountry>) {
 }
 
 @Composable
-private fun ProductionCompany(companies: List<ProductionCompany>){
+private fun ProductionCompany(companies: List<ProductionCompany>) {
     Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.smallHorizontalPadding)))
     Column {
         Text(text = "${stringResource(id = R.string.production_companies_text)}:", style = bodyBold)
@@ -173,7 +180,7 @@ private fun ProductionCompany(companies: List<ProductionCompany>){
 }
 
 @Composable
-private fun Genres(genres: List<Genre>?){
+private fun Genres(genres: List<Genre>?) {
     genres?.map {
         it.name?.let { genre ->
             BulletList(text = genre)
@@ -183,7 +190,7 @@ private fun Genres(genres: List<Genre>?){
 
 @Composable
 private fun Title(originalTitle: String?, releasedDate: String?) {
-   originalTitle?.let {
+    originalTitle?.let {
         Text(
             text = "$it $releasedDate",
             textAlign = TextAlign.Center,

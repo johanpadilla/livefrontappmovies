@@ -4,6 +4,7 @@ import com.example.livefront_app_movies.model.MovieDetailResponse
 import com.example.livefront_app_movies.utils.toFullPosterURL
 
 sealed class MovieDetailState {
+    data object Loading : MovieDetailState()
     data class Loaded(
         val movieDetail: MovieDetail? = null
     ) : MovieDetailState()
