@@ -3,7 +3,6 @@
     <dimen name="smallHorizontalPadding">8dp</dimen>
 
     <dimen name="smallVerticalPadding">8dp</dimen>
-    <dimen name="largeXLHorizontalPadding">24dp</dimen>
 
     <dimen name="rowImageHeight">48dp</dimen>
 </resources>

@@ -45,7 +45,10 @@ fun HomeScreen(navController: NavController, viewModel: HomeViewModel) {
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(top = paddingValues.calculateTopPadding()),
+                .padding(
+                    top = paddingValues.calculateTopPadding(),
+                    bottom = paddingValues.calculateBottomPadding()
+                ),
         ) {
             when (moviesState) {
                 is HomeState.Loaded -> {

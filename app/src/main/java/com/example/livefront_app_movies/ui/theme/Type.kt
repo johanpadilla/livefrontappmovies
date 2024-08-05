@@ -23,14 +23,6 @@ val Typography = Typography(
         letterSpacing = 0.sp
     )
 
-    val labelSmall = TextStyle(
-        fontFamily = FontFamily.Default,
-        fontWeight = FontWeight.Medium,
-        fontSize = 11.sp,
-        lineHeight = 16.sp,
-        letterSpacing = 0.5.sp
-    )
-
 val bodyBold = TextStyle(
     fontFamily = FontFamily.Default,
     fontWeight = FontWeight.Bold,

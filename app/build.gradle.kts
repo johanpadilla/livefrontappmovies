@@ -94,6 +94,7 @@ dependencies {
     implementation(libs.google.dagger.hilt)
     implementation(libs.coil)
     implementation(libs.coil.compose)
+    implementation(libs.date.formatter)
 
     kapt(libs.google.dagger.hilt.compiler)
     kapt(libs.moshi.kotlin.codegen)

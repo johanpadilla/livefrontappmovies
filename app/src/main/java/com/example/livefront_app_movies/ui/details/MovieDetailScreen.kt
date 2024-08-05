@@ -1,5 +1,6 @@
 package com.example.livefront_app_movies.ui.details
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -33,10 +34,13 @@ import com.example.livefront_app_movies.R
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import com.example.livefront_app_movies.ui.theme.LocalCustomColorsPalette
 import com.example.livefront_app_movies.ui.theme.bodyBold
 import com.example.livefront_app_movies.ui.theme.titleLarge
 import com.example.livefront_app_movies.ui.util.CenteredMessage
+import com.example.livefront_app_movies.utils.formatDateToMonthAndYear
 import com.example.livefront_app_movies.utils.toFullPosterURL
+import com.example.livefront_app_movies.utils.toMoneyFormat
 import kotlinx.serialization.Serializable
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -73,7 +77,8 @@ fun MovieDetailScreen(
                             end = dimensionResource(
                                 id = R.dimen.smallHorizontalPadding
                             ),
-                            start = dimensionResource(id = R.dimen.smallHorizontalPadding)
+                            start = dimensionResource(id = R.dimen.smallHorizontalPadding),
+                            bottom = paddingValues.calculateBottomPadding()
                         )
                         .verticalScroll(rememberScrollState()),
                     verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.smallVerticalPadding))
@@ -83,7 +88,8 @@ fun MovieDetailScreen(
                     ) {
                         MovieDetailPoster(url = uiState.movieDetail?.fullPosterPath)
                         Column {
-                            val releasedDate = uiState.movieDetail?.releaseDate?.let { "($it)" }
+                            val releasedDate =
+                                uiState.movieDetail?.releaseDate?.let { "(${it.formatDateToMonthAndYear()})" }
                             Title(uiState.movieDetail?.originalTitle, releasedDate)
 
                             Genres(genres = uiState.movieDetail?.genres)
@@ -91,10 +97,9 @@ fun MovieDetailScreen(
                             if (uiState.movieDetail?.spokenLanguages != null && uiState.movieDetail.spokenLanguages.isNotEmpty()) {
                                 SpokenLanguages(uiState.movieDetail.spokenLanguages)
                             }
-
-                            uiState.movieDetail?.budget.let {
+                            if (uiState.movieDetail?.budget != null && uiState.movieDetail.budget > 0) {
                                 Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.smallHorizontalPadding)))
-                                Text(text = "${stringResource(id = R.string.budget_text)}: $$it")
+                                Text(text = "${stringResource(id = R.string.budget_text)}: $${uiState.movieDetail.budget.toMoneyFormat()}")
                             }
 
                             uiState.movieDetail?.status.let {
@@ -116,9 +121,7 @@ fun MovieDetailScreen(
                     }
 
                     uiState.movieDetail?.productionCompanies?.let { companies ->
-
                         if (companies.any { it.logoPath != null }) ProductionCompany(companies = companies)
-
                     }
 
                     uiState.movieDetail?.productionCountries?.let { countries ->
@@ -163,17 +166,21 @@ private fun ProductionCompany(companies: List<ProductionCompany>) {
     Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.smallHorizontalPadding)))
     Column {
         Text(text = "${stringResource(id = R.string.production_companies_text)}:", style = bodyBold)
-        LazyRow(horizontalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.largeXLHorizontalPadding))) {
+        LazyRow(horizontalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.smallHorizontalPadding))) {
             items(companies.size) { index ->
-                AsyncImage(
-                    model = ImageRequest.Builder(LocalContext.current)
-                        .data(companies[index].logoPath?.toFullPosterURL())
-                        .crossfade(true)
-                        .build(),
-                    contentDescription = null,
-                    modifier = Modifier
-                        .height(dimensionResource(id = R.dimen.rowImageHeight))
-                )
+                if(companies[index].logoPath.isNullOrEmpty().not()) {
+                    AsyncImage(
+                        model = ImageRequest.Builder(LocalContext.current)
+                            .data(companies[index].logoPath?.toFullPosterURL())
+                            .crossfade(true)
+                            .build(),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .height(dimensionResource(id = R.dimen.rowImageHeight))
+                            .background(color = LocalCustomColorsPalette.current.productionCompaniesBackgroundColor)
+                            .padding(dimensionResource(id = R.dimen.smallHorizontalPadding))
+                    )
+                }
             }
         }
     }
