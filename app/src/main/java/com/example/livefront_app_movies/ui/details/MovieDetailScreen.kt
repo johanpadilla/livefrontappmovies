@@ -19,6 +19,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
@@ -51,7 +52,7 @@ fun MovieDetailScreen(
     viewModel: MovieDetailViewModel
 ) {
     viewModel.getMovieDetail(movieId)
-    val uiState = viewModel.detail.collectAsState().value
+    val movieDetailState = viewModel.detail.collectAsState().value
     Scaffold(
         topBar = {
             TopAppBar(
@@ -67,73 +68,80 @@ fun MovieDetailScreen(
             )
         }
     ) { paddingValues ->
-        when (uiState) {
-            is MovieDetailState.Loaded -> {
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(
-                            top = paddingValues.calculateTopPadding(),
-                            end = dimensionResource(
-                                id = R.dimen.smallHorizontalPadding
-                            ),
-                            start = dimensionResource(id = R.dimen.smallHorizontalPadding),
-                            bottom = paddingValues.calculateBottomPadding()
-                        )
-                        .verticalScroll(rememberScrollState()),
-                    verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.smallVerticalPadding))
-                ) {
-                    Row(
-                        horizontalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.smallHorizontalPadding))
+        PullToRefreshBox(
+            isRefreshing = movieDetailState is MovieDetailState.Loading,
+            onRefresh = { viewModel.getMovieDetail(movieId) },
+            modifier = Modifier
+                .padding(
+                    top = paddingValues.calculateTopPadding(),
+                    end = dimensionResource(
+                        id = R.dimen.smallHorizontalPadding
+                    ),
+                    start = dimensionResource(id = R.dimen.smallHorizontalPadding),
+                    bottom = paddingValues.calculateBottomPadding()
+                )
+                .fillMaxSize()
+        ) {
+            when (movieDetailState) {
+                is MovieDetailState.Loaded -> {
+                    Column(
+                        modifier = Modifier
+                            .verticalScroll(rememberScrollState()),
+                        verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.smallVerticalPadding))
                     ) {
-                        MovieDetailPoster(url = uiState.movieDetail?.fullPosterPath)
-                        Column {
-                            val releasedDate =
-                                uiState.movieDetail?.releaseDate?.let { "(${it.formatDateToMonthAndYear()})" }
-                            Title(uiState.movieDetail?.originalTitle, releasedDate)
+                        Row(
+                            horizontalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.smallHorizontalPadding))
+                        ) {
+                            MovieDetailPoster(url = movieDetailState.movieDetail?.fullPosterPath)
+                            Column {
+                                val releasedDate =
+                                    movieDetailState.movieDetail?.releaseDate?.let { "(${it.formatDateToMonthAndYear()})" }
+                                Title(movieDetailState.movieDetail?.originalTitle, releasedDate)
 
-                            Genres(genres = uiState.movieDetail?.genres)
+                                Genres(genres = movieDetailState.movieDetail?.genres)
 
-                            if (uiState.movieDetail?.spokenLanguages != null && uiState.movieDetail.spokenLanguages.isNotEmpty()) {
-                                SpokenLanguages(uiState.movieDetail.spokenLanguages)
-                            }
-                            if (uiState.movieDetail?.budget != null && uiState.movieDetail.budget > 0) {
-                                Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.smallHorizontalPadding)))
-                                Text(text = "${stringResource(id = R.string.budget_text)}: $${uiState.movieDetail.budget.toMoneyFormat()}")
+                                if (movieDetailState.movieDetail?.spokenLanguages != null && movieDetailState.movieDetail.spokenLanguages.isNotEmpty()) {
+                                    SpokenLanguages(movieDetailState.movieDetail.spokenLanguages)
+                                }
+                                if (movieDetailState.movieDetail?.budget != null && movieDetailState.movieDetail.budget > 0) {
+                                    Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.smallHorizontalPadding)))
+                                    Text(text = "${stringResource(id = R.string.budget_text)}: $${movieDetailState.movieDetail.budget.toMoneyFormat()}")
+                                }
+
+                                movieDetailState.movieDetail?.status.let {
+                                    Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.smallHorizontalPadding)))
+                                    Text(text = "${stringResource(id = R.string.status_text)}: $it")
+                                }
                             }
 
-                            uiState.movieDetail?.status.let {
-                                Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.smallHorizontalPadding)))
-                                Text(text = "${stringResource(id = R.string.status_text)}: $it")
-                            }
                         }
 
-                    }
-
-                    uiState.movieDetail?.overview?.let { overview ->
-                        val synopsis = buildAnnotatedString {
-                            withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                                append("${stringResource(id = R.string.synopsis_text)} ")
+                        movieDetailState.movieDetail?.overview?.let { overview ->
+                            val synopsis = buildAnnotatedString {
+                                withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                                    append("${stringResource(id = R.string.synopsis_text)} ")
+                                }
+                                append(overview)
                             }
-                            append(overview)
+                            Text(text = synopsis)
                         }
-                        Text(text = synopsis)
-                    }
 
-                    uiState.movieDetail?.productionCompanies?.let { companies ->
-                        if (companies.any { it.logoPath != null }) ProductionCompany(companies = companies)
-                    }
+                        movieDetailState.movieDetail?.productionCompanies?.let { companies ->
+                            if (companies.any { it.logoPath != null }) ProductionCompany(companies = companies)
+                        }
 
-                    uiState.movieDetail?.productionCountries?.let { countries ->
-                        ProductionCountry(countries = countries)
+                        movieDetailState.movieDetail?.productionCountries?.let { countries ->
+                            ProductionCountry(countries = countries)
+                        }
                     }
                 }
-            }
 
-            is MovieDetailState.Loading -> CenteredMessage(message = stringResource(id = R.string.loading_text_message))
-            is MovieDetailState.Empty -> CenteredMessage(message = stringResource(id = R.string.empty_text_message))
-            is MovieDetailState.Error -> CenteredMessage(message = stringResource(id = R.string.error_text_message))
+                is MovieDetailState.Loading -> CenteredMessage(message = stringResource(id = R.string.loading_text_message))
+                is MovieDetailState.Empty -> CenteredMessage(message = stringResource(id = R.string.empty_text_message))
+                is MovieDetailState.Error -> CenteredMessage(message = stringResource(id = R.string.error_text_message))
+            }
         }
+
     }
 }
 
@@ -168,7 +176,7 @@ private fun ProductionCompany(companies: List<ProductionCompany>) {
         Text(text = "${stringResource(id = R.string.production_companies_text)}:", style = bodyBold)
         LazyRow(horizontalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.smallHorizontalPadding))) {
             items(companies.size) { index ->
-                if(companies[index].logoPath.isNullOrEmpty().not()) {
+                if (companies[index].logoPath.isNullOrEmpty().not()) {
                     AsyncImage(
                         model = ImageRequest.Builder(LocalContext.current)
                             .data(companies[index].logoPath?.toFullPosterURL())

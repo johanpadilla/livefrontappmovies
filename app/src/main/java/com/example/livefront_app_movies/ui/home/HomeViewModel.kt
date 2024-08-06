@@ -24,23 +24,21 @@ class HomeViewModel @Inject constructor(
     val movies: StateFlow<HomeState> = _movies.asStateFlow()
 
     init {
-        viewModelScope.launch(ioDispatcher) {
-            getMovies(1)
-        }
-
+        getMovies()
     }
-
-    suspend fun getMovies(page: Int = 1) {
-        val response = performApiCall(ioDispatcher) {
-            movieService.getPopularMovies(
-                mutableMapOf(
-                    "language" to "en-US",
-                    "page" to page.toString()
+    fun getMovies(page: Int = 1) {
+        viewModelScope.launch(ioDispatcher) {
+            _movies.value = HomeState.Loading
+            val response = performApiCall(ioDispatcher) {
+                movieService.getPopularMovies(
+                    mutableMapOf(
+                        "language" to "en-US",
+                        "page" to page.toString()
+                    )
                 )
-            )
+            }
+            _movies.value = getStateFromResponse(response)
         }
-        _movies.value = getStateFromResponse(response)
-
     }
 
     private fun getStateFromResponse(moviesResponse: NetworkResponse<PopularMovieResponse>): HomeState {

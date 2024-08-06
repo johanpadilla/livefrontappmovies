@@ -22,6 +22,7 @@ class MovieDetailViewModel @Inject constructor(private val movieService: MovieSe
     fun getMovieDetail(movieId: String?) {
         movieId?.let {
             viewModelScope.launch(Dispatchers.IO) {
+                _details.value = MovieDetailState.Loading
                 val response = performApiCall(Dispatchers.IO) {movieService.getMovieDetail(movieId)}
                 _details.value = getStateFromResponse(response)
             }
