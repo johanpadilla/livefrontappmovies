@@ -3,9 +3,10 @@ import java.util.Properties
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
-    alias(libs.plugins.org.jetbrains.kotlin.kapt)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.google.dagger.hilt)
+    alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.ksp)
 }
 
 android {
@@ -70,9 +71,7 @@ android {
     }
 }
 
-kapt {
-    correctErrorTypes = true
-}
+
 
 dependencies {
     implementation(libs.androidx.core.ktx)
@@ -97,8 +96,8 @@ dependencies {
     implementation(libs.coil.compose)
     implementation(libs.date.formatter)
 
-    kapt(libs.google.dagger.hilt.compiler)
-    kapt(libs.moshi.kotlin.codegen)
+    ksp(libs.google.dagger.hilt.compiler)
+    ksp(libs.moshi.kotlin.codegen)
 
     testImplementation(libs.junit)
     testImplementation(libs.kotlinx.coroutines.test)
