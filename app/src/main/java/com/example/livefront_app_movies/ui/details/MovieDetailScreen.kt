@@ -31,6 +31,7 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.livefront_app_movies.R
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
@@ -56,7 +57,7 @@ import kotlinx.serialization.Serializable
 fun MovieDetailScreen(
     navController: NavController,
     movieId: String?,
-    viewModel: MovieDetailViewModel
+    viewModel: MovieDetailViewModel = hiltViewModel()
 ) {
     viewModel.getMovieDetail(movieId)
     val movieDetailState = viewModel.detail.collectAsState().value

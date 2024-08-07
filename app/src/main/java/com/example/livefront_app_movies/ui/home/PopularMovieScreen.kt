@@ -19,6 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
@@ -38,7 +39,7 @@ const val POPULAR_MOVIE_COLUMNS = 2
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PopularMovieScreen(navController: NavController, viewModel: PopularMovieViewModel) {
+fun PopularMovieScreen(navController: NavController, viewModel: PopularMovieViewModel = hiltViewModel()) {
     val moviesState = viewModel.movies.collectAsState().value
     val scope = rememberCoroutineScope()
     Scaffold(
