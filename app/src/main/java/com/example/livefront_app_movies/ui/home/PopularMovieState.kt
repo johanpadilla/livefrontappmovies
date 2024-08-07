@@ -3,16 +3,16 @@ package com.example.livefront_app_movies.ui.home
 import com.example.livefront_app_movies.model.Results
 import com.example.livefront_app_movies.utils.toFullPosterURL
 
-sealed class HomeState {
-    data object Loading : HomeState()
+sealed class PopularMovieState {
+    data object Loading : PopularMovieState()
     data class Loaded(
         val currentPage: Int?,
         val totalPages: Int?,
         val movies: List<PopularMovie>
-    ) : HomeState()
+    ) : PopularMovieState()
 
-    data object Empty : HomeState()
-    data object Error : HomeState()
+    data object Empty : PopularMovieState()
+    data object Error : PopularMovieState()
 }
 
 data class PopularMovie(

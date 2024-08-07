@@ -12,8 +12,8 @@ import androidx.navigation.toRoute
 import com.example.livefront_app_movies.ui.details.MovieDetailViewModel
 import com.example.livefront_app_movies.ui.details.MovieDetailScreen
 import com.example.livefront_app_movies.ui.details.MovieDetailsScreen
-import com.example.livefront_app_movies.ui.home.HomeScreen
-import com.example.livefront_app_movies.ui.home.HomeViewModel
+import com.example.livefront_app_movies.ui.home.PopularMovieScreen
+import com.example.livefront_app_movies.ui.home.PopularMovieViewModel
 import com.example.livefront_app_movies.ui.theme.LivefrontappmoviesTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -27,11 +27,11 @@ class MainActivity : ComponentActivity() {
                 val navController = rememberNavController()
                 NavHost(
                     navController = navController,
-                    startDestination = HomeScreen
+                    startDestination = PopularMovieScreen
                 ) {
-                    composable<HomeScreen> {
-                        val homeViewModel: HomeViewModel by viewModels()
-                        HomeScreen(navController = navController, viewModel = homeViewModel)
+                    composable<PopularMovieScreen> {
+                        val popularMovieViewModel: PopularMovieViewModel by viewModels()
+                        PopularMovieScreen(navController = navController, viewModel = popularMovieViewModel)
                     }
                     composable<MovieDetailsScreen> {
                         val detailsViewModel: MovieDetailViewModel by viewModels()

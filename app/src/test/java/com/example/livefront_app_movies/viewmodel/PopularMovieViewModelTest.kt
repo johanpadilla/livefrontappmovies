@@ -4,8 +4,8 @@ import app.cash.turbine.test
 import com.example.livefront_app_movies.model.PopularMovieResponse
 import com.example.livefront_app_movies.model.Results
 import com.example.livefront_app_movies.network.movie.MovieService
-import com.example.livefront_app_movies.ui.home.HomeState
-import com.example.livefront_app_movies.ui.home.HomeViewModel
+import com.example.livefront_app_movies.ui.home.PopularMovieState
+import com.example.livefront_app_movies.ui.home.PopularMovieViewModel
 import com.example.livefront_app_movies.ui.home.toPopularMovie
 import com.example.livefront_app_movies.TestCoroutineRule
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -23,7 +23,7 @@ import org.mockito.kotlin.whenever
 class PopularMovieViewModelTest {
     private val remoteSource: MovieService = mock()
 
-    private lateinit var viewModel: HomeViewModel
+    private lateinit var viewModel: PopularMovieViewModel
 
 
     @get: Rule
@@ -31,7 +31,7 @@ class PopularMovieViewModelTest {
 
     @Before
     fun setup() {
-        viewModel = HomeViewModel(remoteSource, testCoroutineRule.testDispatcher)
+        viewModel = PopularMovieViewModel(remoteSource, testCoroutineRule.testDispatcher)
     }
 
 
@@ -40,7 +40,7 @@ class PopularMovieViewModelTest {
         advanceUntilIdle()
         val shouldBeLoading = viewModel.movies.first()
 
-        assert(shouldBeLoading is HomeState.Loading)
+        assert(shouldBeLoading is PopularMovieState.Loading)
     }
 
     @Test
@@ -56,7 +56,7 @@ class PopularMovieViewModelTest {
             popularMovieResponse
         )
 
-        val loadedPopular = HomeState.Loaded(
+        val loadedPopular = PopularMovieState.Loaded(
             totalPages = popularMovieResponse.totalPages,
             currentPage = popularMovieResponse.page,
             movies = popularMovieResponse.results.map { it.toPopularMovie() })
@@ -64,10 +64,10 @@ class PopularMovieViewModelTest {
         viewModel.movies.test {
             //viewModel.getMovies(page)
             val shouldBeLoading = awaitItem()
-            assert(shouldBeLoading is HomeState.Loading)
+            assert(shouldBeLoading is PopularMovieState.Loading)
             val shouldBeLoaded = awaitItem()
-            assert(shouldBeLoaded is HomeState.Loaded)
-            assert((shouldBeLoaded as HomeState.Loaded).currentPage == loadedPopular.currentPage)
+            assert(shouldBeLoaded is PopularMovieState.Loaded)
+            assert((shouldBeLoaded as PopularMovieState.Loaded).currentPage == loadedPopular.currentPage)
         }
     }
 
@@ -80,9 +80,9 @@ class PopularMovieViewModelTest {
 
         viewModel.movies.test {
             val shouldBeLoading = awaitItem()
-            assert(shouldBeLoading is HomeState.Loading)
+            assert(shouldBeLoading is PopularMovieState.Loading)
             val shouldBeEmpty = awaitItem()
-            assert(shouldBeEmpty is HomeState.Empty)
+            assert(shouldBeEmpty is PopularMovieState.Empty)
         }
     }
 
@@ -95,15 +95,15 @@ class PopularMovieViewModelTest {
 
         viewModel.movies.test {
             val shouldBeLoading = awaitItem()
-            assert(shouldBeLoading is HomeState.Loading)
+            assert(shouldBeLoading is PopularMovieState.Loading)
             val shouldBeEmpty = awaitItem()
-            assert(shouldBeEmpty is HomeState.Empty)
+            assert(shouldBeEmpty is PopularMovieState.Empty)
 
             viewModel.restart()
             val shouldBeLoading2 = awaitItem()
-            assert(shouldBeLoading2 is HomeState.Loading)
+            assert(shouldBeLoading2 is PopularMovieState.Loading)
             val shouldBeEmpty2 = awaitItem()
-            assert(shouldBeEmpty2 is HomeState.Empty)
+            assert(shouldBeEmpty2 is PopularMovieState.Empty)
         }
     }
 

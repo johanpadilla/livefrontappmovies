@@ -7,6 +7,11 @@ import kotlinx.datetime.format.char
 
 fun String.toFullPosterURL() = "${URL.POSTER_URL}$this"
 
+/**
+ * String formatter extension, it will format a provided date into: Month Day of the Month, year.
+ * Example: Jul 09, 2024
+ * @return String
+ */
 fun String.formatDateToMonthAndYear(): String {
     return LocalDate.parse(this).format(LocalDate.Format {
         monthName(MonthNames.ENGLISH_ABBREVIATED)

@@ -31,9 +31,14 @@ import kotlinx.serialization.Serializable
 
 const val POPULAR_MOVIE_COLUMNS = 2
 
+/**
+ * Principal screen, which provides a list of popular movies fetched by the API.
+ * @param navController - To navigate between screens.
+ * @param viewModel - To handle all the business logic.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(navController: NavController, viewModel: HomeViewModel) {
+fun PopularMovieScreen(navController: NavController, viewModel: PopularMovieViewModel) {
     val moviesState = viewModel.movies.collectAsState().value
     val scope = rememberCoroutineScope()
     Scaffold(
@@ -54,7 +59,7 @@ fun HomeScreen(navController: NavController, viewModel: HomeViewModel) {
                     bottom = paddingValues.calculateBottomPadding()
                 )
             ,
-            isRefreshing = viewModel.movies.collectAsState().value is HomeState.Loading,
+            isRefreshing = viewModel.movies.collectAsState().value is PopularMovieState.Loading,
             onRefresh = {
                 scope.launch {
                     viewModel.restart()
@@ -63,7 +68,7 @@ fun HomeScreen(navController: NavController, viewModel: HomeViewModel) {
             content = {
                 when (moviesState) {
 
-                    is HomeState.Loaded -> {
+                    is PopularMovieState.Loaded -> {
                         LazyColumn(
                             modifier = Modifier
                                 .fillMaxSize(),
@@ -107,9 +112,9 @@ fun HomeScreen(navController: NavController, viewModel: HomeViewModel) {
                         }
                     }
 
-                    is HomeState.Loading -> CenteredMessage(message = stringResource(id = R.string.loading_text_message))
-                    is HomeState.Empty -> CenteredMessage(message = stringResource(id = R.string.empty_text_message))
-                    is HomeState.Error -> CenteredMessage(
+                    is PopularMovieState.Loading -> CenteredMessage(message = stringResource(id = R.string.loading_text_message))
+                    is PopularMovieState.Empty -> CenteredMessage(message = stringResource(id = R.string.empty_text_message))
+                    is PopularMovieState.Error -> CenteredMessage(
                         message = "${stringResource(id = R.string.error_text_message)} ${
                             if (BuildConfig.TOKEN.isEmpty()) stringResource(
                                 id = R.string.check_the_token_text
@@ -136,4 +141,4 @@ private fun MovieCard(popularMovie: PopularMovie, onPopularMovieClick: () -> Uni
 
 
 @Serializable
-object HomeScreen
+object PopularMovieScreen

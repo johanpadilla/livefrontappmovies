@@ -20,6 +20,12 @@ class MovieDetailViewModel @Inject constructor(private val movieService: MovieSe
     private val _details = MutableStateFlow<MovieDetailState>(MovieDetailState.Loading)
     val detail: StateFlow<MovieDetailState> = _details.asStateFlow()
 
+    /**
+     * Fetch the movie detail from the APi if the movieId is not null or empty.
+     * Use of flow, collect detail in your UI to get the data.
+     * @param movieId - movieId to be fetch.
+     * @return Unit
+     */
     fun getMovieDetail(movieId: String?) {
         if(movieId != null && movieId.isEmpty().not()) {
             viewModelScope.launch(ioDispatcher) {

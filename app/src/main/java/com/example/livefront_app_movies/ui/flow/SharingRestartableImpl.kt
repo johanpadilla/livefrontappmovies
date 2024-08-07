@@ -7,6 +7,10 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.merge
 
+/**
+ * Class which provides a restartable flow on demand.
+ * Use it on the .stateIn(started = this) to make your flow restartable.
+ */
 data class SharingRestartableImpl(private val sharingStarted: SharingStarted): SharingRestartable {
 
     private val restartFlow = MutableSharedFlow<SharingCommand>(extraBufferCapacity = 2)

@@ -19,14 +19,14 @@ import javax.inject.Inject
 import kotlin.coroutines.CoroutineContext
 
 @HiltViewModel
-class HomeViewModel @Inject constructor(
+class PopularMovieViewModel @Inject constructor(
     private val movieService: MovieService,
     @IoDispatcher private val ioDispatcher: CoroutineContext,
 ) : ViewModel() {
 
     private val restarter = SharingStarted.WhileSubscribed(FIVE_SECONDS).makeRestartable()
 
-    val movies: StateFlow<HomeState> by lazy {
+    val movies: StateFlow<PopularMovieState> by lazy {
         flow {
             emit(getStateFromResponse(performApiCall(ioDispatcher) {
                 movieService.getPopularMovies(
@@ -36,29 +36,29 @@ class HomeViewModel @Inject constructor(
                     )
                 )
             }))
-        }.catch { emit(HomeState.Empty) }
+        }.catch { emit(PopularMovieState.Empty) }
             .flowOn(ioDispatcher)
             .stateIn(
                 scope = viewModelScope,
                 started = restarter,
-                initialValue = HomeState.Loading
+                initialValue = PopularMovieState.Loading
             )
     }
 
 
-    private fun getStateFromResponse(moviesResponse: NetworkResponse<PopularMovieResponse>): HomeState {
+    private fun getStateFromResponse(moviesResponse: NetworkResponse<PopularMovieResponse>): PopularMovieState {
         return when (moviesResponse) {
             is NetworkResponse.Success -> {
                 val body = moviesResponse.body
                 if (body != null && body.results.isNotEmpty()) {
-                    HomeState.Loaded(
+                    PopularMovieState.Loaded(
                         currentPage = moviesResponse.body.page,
                         totalPages = moviesResponse.body.totalPages,
                         movies = moviesResponse.body.results.map { it.toPopularMovie() })
-                } else HomeState.Empty
+                } else PopularMovieState.Empty
             }
 
-            else -> HomeState.Error
+            else -> PopularMovieState.Error
         }
     }
 

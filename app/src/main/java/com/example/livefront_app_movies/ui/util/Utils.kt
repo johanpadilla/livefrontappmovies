@@ -11,7 +11,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 
-
+/**
+ * Container to display in the center of the screen a message.
+ * Used to display error/empty state.
+ * @param message string
+ * @return Composable Column horizontal/vertical centered aligned.
+ */
 @Composable
 fun CenteredMessage(message: String) {
     Column(

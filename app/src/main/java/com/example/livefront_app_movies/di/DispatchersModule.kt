@@ -5,7 +5,6 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
 import javax.inject.Qualifier
 import kotlin.coroutines.CoroutineContext
 
@@ -23,7 +22,7 @@ annotation class MainDispatcher
 
 @Module
 @InstallIn(SingletonComponent::class)
-object AppModule {
+object DispatchersModule {
 
     @Provides
     @IoDispatcher

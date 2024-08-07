@@ -44,6 +44,13 @@ import com.example.livefront_app_movies.utils.toFullPosterURL
 import com.example.livefront_app_movies.utils.toMoneyFormat
 import kotlinx.serialization.Serializable
 
+/**
+ * Movie details screen.
+ * It will handle all the details UI elements of a provided movie id.
+ * @param navController - To going back.
+ * @param movieId - MovieId to be fetched.
+ * @param viewModel - MovieDetailViewModel to handle all the business logic.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MovieDetailScreen(
