@@ -1,7 +1,9 @@
 
 # Top Popular Movies Viewer
 
-Android-Kotlin based application, which demostrate knowledge of Android trends such as:
+Android-Kotlin based application, which demonstrate knowledge of Android trends such as:
+- Kotlin 2.0
+- KSP.
 - Jetpack Compose, navigation.
 - Dependency Injection using AndroidHilt.
 - Sealed classes.
@@ -28,7 +30,7 @@ Ask for the token to the recruiter.
 - Pull to refresh.
 - Network Image Loading.
 - State management.
-- Portait mode only.
+- Portrait mode only.
 
 Using the https://api.themoviedb.org/ service to fetch data.
 
