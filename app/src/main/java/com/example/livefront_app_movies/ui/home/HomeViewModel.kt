@@ -47,7 +47,6 @@ class HomeViewModel @Inject constructor(
 
 
     private fun getStateFromResponse(moviesResponse: NetworkResponse<PopularMovieResponse>): HomeState {
-        println("Status response: $moviesResponse")
         return when (moviesResponse) {
             is NetworkResponse.Success -> {
                 val body = moviesResponse.body
