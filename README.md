@@ -36,8 +36,9 @@ Using the https://api.themoviedb.org/ service to fetch data.
 
 ## Screenshots
 Home Screen, listing the top popular movies:
-![Popular movies list](https://via.placeholder.com/468x300?text=App+Screenshot+Here)
+
+![Popular movies list](screenshots/light_home.png)
 
 Details Movie Screen, information related to the movie:
-![Popular movies list](https://via.placeholder.com/468x300?text=App+Screenshot+Here)
 
+![Details movie](screenshots/light_details.png)
