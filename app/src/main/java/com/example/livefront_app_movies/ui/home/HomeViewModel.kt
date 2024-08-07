@@ -1,6 +1,5 @@
 package com.example.livefront_app_movies.ui.home
 
-import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.livefront_app_movies.di.IoDispatcher
@@ -8,11 +7,14 @@ import com.example.livefront_app_movies.model.PopularMovieResponse
 import com.example.livefront_app_movies.network.movie.MovieService
 import com.example.livefront_app_movies.network.NetworkResponse
 import com.example.livefront_app_movies.network.utils.performApiCall
+import com.example.livefront_app_movies.ui.flow.makeRestartable
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
 import kotlin.coroutines.CoroutineContext
 
@@ -21,25 +23,31 @@ class HomeViewModel @Inject constructor(
     private val movieService: MovieService,
     @IoDispatcher private val ioDispatcher: CoroutineContext,
 ) : ViewModel() {
-    private val _movies = MutableStateFlow<HomeState>(HomeState.Loading)
-    val movies: StateFlow<HomeState> = _movies.asStateFlow()
 
-    fun getMovies(page: Int = 1) {
-        viewModelScope.launch(ioDispatcher) {
-            _movies.value = HomeState.Loading
-            val response = performApiCall(ioDispatcher) {
+    private val restarter = SharingStarted.WhileSubscribed(5_000).makeRestartable()
+
+    val movies: StateFlow<HomeState> by lazy {
+        flow {
+            emit(getStateFromResponse(performApiCall(ioDispatcher) {
                 movieService.getPopularMovies(
                     mapOf(
                         "language" to "en-US",
-                        "page" to page.toString()
+                        "page" to "1"
                     )
                 )
-            }
-            _movies.value = getStateFromResponse(response)
-        }
+            }))
+        }.catch { emit(HomeState.Empty) }
+            .flowOn(ioDispatcher)
+            .stateIn(
+                scope = viewModelScope,
+                started = restarter,
+                initialValue = HomeState.Loading
+            )
     }
 
+
     private fun getStateFromResponse(moviesResponse: NetworkResponse<PopularMovieResponse>): HomeState {
+        println("Status response: $moviesResponse")
         return when (moviesResponse) {
             is NetworkResponse.Success -> {
                 val body = moviesResponse.body
@@ -54,4 +62,6 @@ class HomeViewModel @Inject constructor(
             else -> HomeState.Error
         }
     }
+
+    fun restart() = restarter.restart()
 }

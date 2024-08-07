@@ -27,13 +27,13 @@ object AppModule {
 
     @Provides
     @IoDispatcher
-    fun provideIoDispatcher(): CoroutineContext = (Dispatchers.IO + Job())
+    fun provideIoDispatcher(): CoroutineContext = Dispatchers.IO
 
     @Provides
     @DefaultDispatcher
-    fun provideDefaultDispatcher(): CoroutineContext = Dispatchers.Default + Job()
+    fun provideDefaultDispatcher(): CoroutineContext = Dispatchers.Default
 
     @Provides
     @MainDispatcher
-    fun provideMainDispatcher(): CoroutineContext = Dispatchers.Main + Job()
+    fun provideMainDispatcher(): CoroutineContext = Dispatchers.Main
 }

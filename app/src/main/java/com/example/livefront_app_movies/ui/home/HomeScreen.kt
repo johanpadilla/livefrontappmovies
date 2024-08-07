@@ -57,7 +57,7 @@ fun HomeScreen(navController: NavController, viewModel: HomeViewModel) {
             isRefreshing = viewModel.movies.collectAsState().value is HomeState.Loading,
             onRefresh = {
                 scope.launch {
-                    viewModel.getMovies()
+                    viewModel.restart()
                 }
             },
             content = {

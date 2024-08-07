@@ -22,7 +22,6 @@ import org.mockito.kotlin.whenever
 @OptIn(ExperimentalCoroutinesApi::class)
 class PopularMovieViewModelTest {
     private val remoteSource: MovieService = mock()
-    //private val networkApiCall: NetworkApiCall = mockk(relaxed = true)
 
     private lateinit var viewModel: HomeViewModel
 
@@ -63,7 +62,7 @@ class PopularMovieViewModelTest {
             movies = popularMovieResponse.results.map { it.toPopularMovie() })
 
         viewModel.movies.test {
-            viewModel.getMovies(page)
+            //viewModel.getMovies(page)
             val shouldBeLoading = awaitItem()
             assert(shouldBeLoading is HomeState.Loading)
             val shouldBeLoaded = awaitItem()
@@ -83,7 +82,7 @@ class PopularMovieViewModelTest {
 
         viewModel.movies.test {
 
-            viewModel.getMovies(page)
+            //viewModel.getMovies(page)
             val shouldBeLoading = awaitItem()
             assert(shouldBeLoading is HomeState.Loading)
             val shouldBeEmpty = awaitItem()
@@ -121,17 +120,6 @@ class PopularMovieViewModelTest {
             Dispatchers.resetMain()
         }
 
-        @Test
-        fun testSuccessResponseWithEmptyBody() = runTest(dispatchers) {
-            val subject = HomeViewModel(remoteSource, dispatchers)
-            val response = MockResponse()
-                .setResponseCode(200)
-                .setBody(PopularMovieResponseJsonAdapter(moshi).toJson(PopularMovieResponse()))
-            mockWebServer.enqueue(response)
-            subject.getMovies(anyInt())
-
-            assert(subject.movies.value is HomeState.Empty)
-        }
 
         @Test
         fun testErrorNetworkError() = runTest(dispatchers) {
@@ -145,23 +133,5 @@ class PopularMovieViewModelTest {
             assert(subject.movies.value is HomeState.Error)
 
         }
-
-        @Test
-        fun testSuccessNetworkLoadedState() = runTest(dispatchers) {
-            val subject = HomeViewModel(remoteSource, dispatchers)
-            val response = MockResponse()
-                .setResponseCode(200)
-                .setBody(
-                    PopularMovieResponseJsonAdapter(moshi).toJson(
-                        PopularMovieResponse(
-                            results = listOf(
-                                Results()
-                            )
-                        )
-                    )
-                )
-            mockWebServer.enqueue(response)
-            subject.getMovies(anyInt())
-            assert(subject.movies.value is HomeState.Loaded)
-        }*/
+*/
 }
