@@ -24,7 +24,7 @@ class HomeViewModel @Inject constructor(
     @IoDispatcher private val ioDispatcher: CoroutineContext,
 ) : ViewModel() {
 
-    private val restarter = SharingStarted.WhileSubscribed(5_000).makeRestartable()
+    private val restarter = SharingStarted.WhileSubscribed(FIVE_SECONDS).makeRestartable()
 
     val movies: StateFlow<HomeState> by lazy {
         flow {
@@ -63,4 +63,8 @@ class HomeViewModel @Inject constructor(
     }
 
     fun restart() = restarter.restart()
+
+    companion object {
+        private const val FIVE_SECONDS: Long = 5_000
+    }
 }

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">livefront-app-movies</string>
+    <string name="app_name">Top Popular Movies Viewer</string>
 
     <string name="home_screen_title">Popular Movies</string>
     <string name="movie_details_screen_title">Movie Details</string>
