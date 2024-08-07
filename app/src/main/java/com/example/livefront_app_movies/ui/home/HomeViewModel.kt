@@ -1,5 +1,6 @@
 package com.example.livefront_app_movies.ui.home
 
+import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.livefront_app_movies.di.IoDispatcher
@@ -18,20 +19,17 @@ import kotlin.coroutines.CoroutineContext
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val movieService: MovieService,
-    @IoDispatcher private val ioDispatcher: CoroutineContext
+    @IoDispatcher private val ioDispatcher: CoroutineContext,
 ) : ViewModel() {
     private val _movies = MutableStateFlow<HomeState>(HomeState.Loading)
     val movies: StateFlow<HomeState> = _movies.asStateFlow()
 
-    init {
-        getMovies()
-    }
     fun getMovies(page: Int = 1) {
         viewModelScope.launch(ioDispatcher) {
             _movies.value = HomeState.Loading
             val response = performApiCall(ioDispatcher) {
                 movieService.getPopularMovies(
-                    mutableMapOf(
+                    mapOf(
                         "language" to "en-US",
                         "page" to page.toString()
                     )
@@ -45,7 +43,7 @@ class HomeViewModel @Inject constructor(
         return when (moviesResponse) {
             is NetworkResponse.Success -> {
                 val body = moviesResponse.body
-                if (body.results.isNotEmpty()) {
+                if (body != null && body.results.isNotEmpty()) {
                     HomeState.Loaded(
                         currentPage = moviesResponse.body.page,
                         totalPages = moviesResponse.body.totalPages,

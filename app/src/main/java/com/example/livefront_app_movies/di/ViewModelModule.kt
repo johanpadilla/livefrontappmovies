@@ -1,6 +1,7 @@
 package com.example.livefront_app_movies.di
 
 import com.example.livefront_app_movies.network.movie.MovieService
+import com.example.livefront_app_movies.ui.details.MovieDetailViewModel
 import com.example.livefront_app_movies.ui.home.HomeViewModel
 import dagger.Module
 import dagger.Provides
@@ -13,7 +14,15 @@ import kotlin.coroutines.CoroutineContext
 class ViewModelModule {
 
     @Provides
-    fun provideViewModel(movieService: MovieService, @IoDispatcher dispatcher: CoroutineContext) =
+    fun provideViewModel(
+        movieService: MovieService,
+        @IoDispatcher dispatcher: CoroutineContext,
+    ) =
         HomeViewModel(movieService, dispatcher)
 
+    @Provides
+    fun provideDetailViewModel(
+        movieService: MovieService,
+        @IoDispatcher dispatcher: CoroutineContext,
+    ) = MovieDetailViewModel(movieService, dispatcher)
 }

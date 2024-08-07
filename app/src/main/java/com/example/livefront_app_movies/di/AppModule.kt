@@ -36,6 +36,4 @@ object AppModule {
     @Provides
     @MainDispatcher
     fun provideMainDispatcher(): CoroutineContext = Dispatchers.Main + Job()
-
-
 }
