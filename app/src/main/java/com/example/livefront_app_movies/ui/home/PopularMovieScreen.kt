@@ -17,6 +17,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -39,7 +40,10 @@ const val POPULAR_MOVIE_COLUMNS = 2
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PopularMovieScreen(navController: NavController, viewModel: PopularMovieViewModel = hiltViewModel()) {
+fun PopularMovieScreen(
+    navController: NavController,
+    viewModel: PopularMovieViewModel = hiltViewModel()
+) {
     val moviesState = viewModel.movies.collectAsState().value
     val scope = rememberCoroutineScope()
     Scaffold(
@@ -51,7 +55,7 @@ fun PopularMovieScreen(navController: NavController, viewModel: PopularMovieView
             )
         },
 
-    ) { paddingValues ->
+        ) { paddingValues ->
         PullToRefreshBox(
             modifier = Modifier
                 .fillMaxSize()
@@ -59,7 +63,7 @@ fun PopularMovieScreen(navController: NavController, viewModel: PopularMovieView
                     top = paddingValues.calculateTopPadding(),
                     bottom = paddingValues.calculateBottomPadding()
                 )
-            ,
+                .testTag("popular_movie_container"),
             isRefreshing = viewModel.movies.collectAsState().value is PopularMovieState.Loading,
             onRefresh = {
                 scope.launch {
@@ -113,9 +117,14 @@ fun PopularMovieScreen(navController: NavController, viewModel: PopularMovieView
                         }
                     }
 
-                    is PopularMovieState.Loading -> CenteredMessage(message = stringResource(id = R.string.loading_text_message))
+                    is PopularMovieState.Loading -> CenteredMessage(
+                        modifier = Modifier.testTag("popular_movie_loading_container"),
+                        message = stringResource(id = R.string.loading_text_message)
+                    )
+
                     is PopularMovieState.Empty -> CenteredMessage(message = stringResource(id = R.string.empty_text_message))
                     is PopularMovieState.Error -> CenteredMessage(
+                        modifier = Modifier.testTag("popular_movie_error_container"),
                         message = "${stringResource(id = R.string.error_text_message)} ${
                             if (BuildConfig.TOKEN.isEmpty()) stringResource(
                                 id = R.string.check_the_token_text

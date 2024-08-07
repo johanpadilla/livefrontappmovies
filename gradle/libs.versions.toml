@@ -3,8 +3,8 @@ agp = "8.5.1"
 kotlin = "2.0.0"
 coreKtx = "1.10.1"
 junit = "4.13.2"
-junitVersion = "1.1.5"
-espressoCore = "3.5.1"
+junitVersion = "1.2.1"
+espressoCore = "3.6.1"
 lifecycleRuntimeKtx = "2.6.1"
 activityCompose = "1.8.0"
 composeBom = "2024.04.01"
@@ -66,6 +66,7 @@ androidx-core-testing = { module = "androidx.arch.core:core-testing", version.re
 mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
 mockk-android = { module = "io.mockk:mockk-android", version.ref = "mockk" }
 turbine = {module = "app.cash.turbine:turbine", version.ref = "turbine"}
+dagger-hilt-android-testing = { module = "com.google.dagger:hilt-android-testing", version.ref = "hiltVersion" }
 
 
 [plugins]

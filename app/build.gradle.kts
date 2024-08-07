@@ -20,7 +20,7 @@ android {
         versionCode = 1
         versionName = "1.0"
 
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner = "com.example.livefront_app_movies.HiltTestRunner"
         vectorDrawables {
             useSupportLibrary = true
         }
@@ -108,6 +108,9 @@ dependencies {
     testImplementation(libs.mockk)
     testImplementation(libs.mockk.android)
     testImplementation(libs.turbine)
+
+    kspAndroidTest(libs.google.dagger.hilt.compiler)
+    androidTestImplementation(libs.dagger.hilt.android.testing)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
