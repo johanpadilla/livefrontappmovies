@@ -1,4 +1,4 @@
-package com.example.livefront_app_movies.utils
+package com.example.livefront_app_movies
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi

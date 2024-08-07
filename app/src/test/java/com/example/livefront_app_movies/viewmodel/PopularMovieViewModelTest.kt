@@ -1,4 +1,4 @@
-package com.example.livefront_app_movies
+package com.example.livefront_app_movies.viewmodel
 
 import app.cash.turbine.test
 import com.example.livefront_app_movies.model.PopularMovieResponse
@@ -7,7 +7,7 @@ import com.example.livefront_app_movies.network.movie.MovieService
 import com.example.livefront_app_movies.ui.home.HomeState
 import com.example.livefront_app_movies.ui.home.HomeViewModel
 import com.example.livefront_app_movies.ui.home.toPopularMovie
-import com.example.livefront_app_movies.utils.TestCoroutineRule
+import com.example.livefront_app_movies.TestCoroutineRule
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.advanceUntilIdle
@@ -78,17 +78,35 @@ class PopularMovieViewModelTest {
         val params = mutableMapOf(("language" to "en-US"))
         params.putAll(mapOf(("page" to page.toString())))
 
-
-
         viewModel.movies.test {
-
-            //viewModel.getMovies(page)
             val shouldBeLoading = awaitItem()
             assert(shouldBeLoading is HomeState.Loading)
             val shouldBeEmpty = awaitItem()
             assert(shouldBeEmpty is HomeState.Empty)
         }
     }
+
+    @Test
+    fun withRestartNoResultsShouldBeEmptyState() = runTest {
+        advanceUntilIdle()
+        val page = anyInt()
+        val params = mutableMapOf(("language" to "en-US"))
+        params.putAll(mapOf(("page" to page.toString())))
+
+        viewModel.movies.test {
+            val shouldBeLoading = awaitItem()
+            assert(shouldBeLoading is HomeState.Loading)
+            val shouldBeEmpty = awaitItem()
+            assert(shouldBeEmpty is HomeState.Empty)
+
+            viewModel.restart()
+            val shouldBeLoading2 = awaitItem()
+            assert(shouldBeLoading2 is HomeState.Loading)
+            val shouldBeEmpty2 = awaitItem()
+            assert(shouldBeEmpty2 is HomeState.Empty)
+        }
+    }
+
 
     /*    private lateinit var remoteSource: MovieService
 

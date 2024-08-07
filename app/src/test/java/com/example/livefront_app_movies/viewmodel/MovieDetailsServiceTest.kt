@@ -1,4 +1,4 @@
-package com.example.livefront_app_movies
+package com.example.livefront_app_movies.viewmodel
 
 import app.cash.turbine.test
 import com.example.livefront_app_movies.model.MovieDetailResponse
@@ -6,7 +6,7 @@ import com.example.livefront_app_movies.network.movie.MovieService
 import com.example.livefront_app_movies.ui.details.MovieDetail
 import com.example.livefront_app_movies.ui.details.MovieDetailState
 import com.example.livefront_app_movies.ui.details.MovieDetailViewModel
-import com.example.livefront_app_movies.utils.TestCoroutineRule
+import com.example.livefront_app_movies.TestCoroutineRule
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.advanceUntilIdle
