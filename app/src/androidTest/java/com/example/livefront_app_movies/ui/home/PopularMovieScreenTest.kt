@@ -1,4 +1,4 @@
-package com.example.livefront_app_movies
+package com.example.livefront_app_movies.ui.home
 
 import androidx.activity.compose.setContent
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
@@ -6,7 +6,7 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.livefront_app_movies.ui.home.PopularMovieScreen
+import com.example.livefront_app_movies.MainActivity
 import com.example.livefront_app_movies.ui.theme.LivefrontappmoviesTheme
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
