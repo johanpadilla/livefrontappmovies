@@ -13,7 +13,6 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -28,7 +27,6 @@ import com.example.livefront_app_movies.BuildConfig
 import com.example.livefront_app_movies.R
 import com.example.livefront_app_movies.ui.details.MovieDetailsScreen
 import com.example.livefront_app_movies.ui.util.CenteredMessage
-import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
 
 const val POPULAR_MOVIE_COLUMNS = 2
@@ -45,7 +43,7 @@ fun PopularMovieScreen(
     viewModel: PopularMovieViewModel = hiltViewModel()
 ) {
     val moviesState = viewModel.movies.collectAsState().value
-    val scope = rememberCoroutineScope()
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -66,9 +64,7 @@ fun PopularMovieScreen(
                 .testTag("popular_movie_container"),
             isRefreshing = viewModel.movies.collectAsState().value is PopularMovieState.Loading,
             onRefresh = {
-                scope.launch {
-                    viewModel.restart()
-                }
+                viewModel.restart()
             },
             content = {
                 when (moviesState) {

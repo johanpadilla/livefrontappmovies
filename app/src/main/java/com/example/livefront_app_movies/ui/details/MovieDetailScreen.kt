@@ -60,7 +60,7 @@ fun MovieDetailScreen(
     viewModel: MovieDetailViewModel = hiltViewModel()
 ) {
     viewModel.getMovieDetail(movieId)
-    val movieDetailState = viewModel.detail.collectAsState().value
+    val movieDetailState = viewModel.detail.collectAsState()
     Scaffold(
         topBar = {
             TopAppBar(
@@ -77,8 +77,10 @@ fun MovieDetailScreen(
         }
     ) { paddingValues ->
         PullToRefreshBox(
-            isRefreshing = movieDetailState is MovieDetailState.Loading,
-            onRefresh = { viewModel.getMovieDetail(movieId) },
+            isRefreshing = movieDetailState.value is MovieDetailState.Loading,
+            onRefresh = {
+                viewModel.onRefresh(movieId)
+            },
             modifier = Modifier
                 .padding(
                     top = paddingValues.calculateTopPadding(),
@@ -90,66 +92,71 @@ fun MovieDetailScreen(
                 )
                 .fillMaxSize()
         ) {
-            when (movieDetailState) {
-                is MovieDetailState.Loaded -> {
-                    Column(
-                        modifier = Modifier
-                            .verticalScroll(rememberScrollState()),
-                        verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.smallVerticalPadding))
-                    ) {
-                        Row(
-                            horizontalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.smallHorizontalPadding))
-                        ) {
-                            MovieDetailPoster(url = movieDetailState.movieDetail?.fullPosterPath)
-                            Column {
-                                val releasedDate =
-                                    movieDetailState.movieDetail?.releaseDate?.let { "(${it.formatDateToMonthAndYear()})" }
-                                Title(movieDetailState.movieDetail?.originalTitle, releasedDate)
+            Content(movieDetailState = movieDetailState.value)
+        }
 
-                                Genres(genres = movieDetailState.movieDetail?.genres)
+    }
+}
 
-                                if (movieDetailState.movieDetail?.spokenLanguages != null && movieDetailState.movieDetail.spokenLanguages.isNotEmpty()) {
-                                    SpokenLanguages(movieDetailState.movieDetail.spokenLanguages)
-                                }
-                                if (movieDetailState.movieDetail?.budget != null && movieDetailState.movieDetail.budget > 0) {
-                                    Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.smallHorizontalPadding)))
-                                    Text(text = "${stringResource(id = R.string.budget_text)}: $${movieDetailState.movieDetail.budget.toMoneyFormat()}")
-                                }
+@Composable
+private fun Content(movieDetailState: MovieDetailState) {
+    when (movieDetailState) {
+        is MovieDetailState.Loaded -> {
+            Column(
+                modifier = Modifier
+                    .verticalScroll(rememberScrollState()),
+                verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.smallVerticalPadding))
+            ) {
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.smallHorizontalPadding))
+                ) {
+                    MovieDetailPoster(url = movieDetailState.movieDetail?.fullPosterPath)
+                    Column {
+                        val releasedDate =
+                            movieDetailState.movieDetail?.releaseDate?.let { "(${it.formatDateToMonthAndYear()})" }
+                        Title(movieDetailState.movieDetail?.originalTitle, releasedDate)
 
-                                movieDetailState.movieDetail?.status.let {
-                                    Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.smallHorizontalPadding)))
-                                    Text(text = "${stringResource(id = R.string.status_text)}: $it")
-                                }
-                            }
+                        Genres(genres = movieDetailState.movieDetail?.genres)
 
+                        if (movieDetailState.movieDetail?.spokenLanguages != null && movieDetailState.movieDetail.spokenLanguages.isNotEmpty()) {
+                            SpokenLanguages(movieDetailState.movieDetail.spokenLanguages)
+                        }
+                        if (movieDetailState.movieDetail?.budget != null && movieDetailState.movieDetail.budget > 0) {
+                            Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.smallHorizontalPadding)))
+                            Text(text = "${stringResource(id = R.string.budget_text)}: $${movieDetailState.movieDetail.budget.toMoneyFormat()}")
                         }
 
-                        movieDetailState.movieDetail?.overview?.let { overview ->
-                            val synopsis = buildAnnotatedString {
-                                withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                                    append("${stringResource(id = R.string.synopsis_text)} ")
-                                }
-                                append(overview)
-                            }
-                            Text(text = synopsis)
-                        }
-
-                        movieDetailState.movieDetail?.productionCompanies?.let { companies ->
-                            if (companies.any { it.logoPath != null }) ProductionCompany(companies = companies)
-                        }
-
-                        movieDetailState.movieDetail?.productionCountries?.let { countries ->
-                            ProductionCountry(countries = countries)
+                        movieDetailState.movieDetail?.status.let {
+                            Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.smallHorizontalPadding)))
+                            Text(text = "${stringResource(id = R.string.status_text)}: $it")
                         }
                     }
+
                 }
 
-                is MovieDetailState.Loading -> CenteredMessage(message = stringResource(id = R.string.loading_text_message))
-                is MovieDetailState.Empty -> CenteredMessage(message = stringResource(id = R.string.empty_text_message))
-                is MovieDetailState.Error -> CenteredMessage(message = stringResource(id = R.string.error_text_message))
+                movieDetailState.movieDetail?.overview?.let { overview ->
+                    val synopsis = buildAnnotatedString {
+                        withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                            append("${stringResource(id = R.string.synopsis_text)} ")
+                        }
+                        append(overview)
+                    }
+                    Text(text = synopsis)
+                }
+
+                movieDetailState.movieDetail?.productionCompanies?.let { companies ->
+                    if (companies.any { it.logoPath != null }) ProductionCompany(companies = companies)
+                }
+
+                movieDetailState.movieDetail?.productionCountries?.let { countries ->
+                    ProductionCountry(countries = countries)
+                }
             }
         }
 
+        is MovieDetailState.Loading -> CenteredMessage(message = stringResource(id = R.string.loading_text_message))
+        is MovieDetailState.Empty -> CenteredMessage(message = stringResource(id = R.string.empty_text_message))
+        is MovieDetailState.Error -> CenteredMessage(message = stringResource(id = R.string.error_text_message))
     }
 }
 
