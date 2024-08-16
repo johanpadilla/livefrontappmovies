@@ -3,10 +3,10 @@ package com.example.livefront_app_movies.ui.details
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.livefront_app_movies.di.IoDispatcher
+import com.example.livefront_app_movies.model.movie_detail.MovieDetailRepository
 import com.example.livefront_app_movies.model.movie_detail.MovieDetailResponse
 import com.example.livefront_app_movies.network.movie.MovieService
 import com.example.livefront_app_movies.network.NetworkResponse
-import com.example.livefront_app_movies.network.utils.performApiCall
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -17,8 +17,8 @@ import kotlin.coroutines.CoroutineContext
 
 @HiltViewModel
 class MovieDetailViewModel @Inject constructor(
-    private val movieService: MovieService,
-    @IoDispatcher private val ioDispatcher: CoroutineContext
+    private val repository: MovieDetailRepository,
+    private val ioDispatcher: CoroutineContext
 ) : ViewModel() {
     private val _details = MutableStateFlow<MovieDetailState>(MovieDetailState.Loading)
     val detail: StateFlow<MovieDetailState> = _details.asStateFlow()
@@ -32,7 +32,7 @@ class MovieDetailViewModel @Inject constructor(
     fun getMovieDetail(movieId: String?) {
         if (movieId != null && movieId.isEmpty().not()) {
             viewModelScope.launch(ioDispatcher) {
-                val response = performApiCall(ioDispatcher) { movieService.getMovieDetail(movieId) }
+                val response = repository.getMovieDetail(movieId)
                 _details.value = getStateFromResponse(response)
             }
         } else _details.value = MovieDetailState.Error
@@ -43,11 +43,11 @@ class MovieDetailViewModel @Inject constructor(
         getMovieDetail(movieId)
     }
 
-    private fun getStateFromResponse(movieDetailResponse: NetworkResponse<MovieDetailResponse>): MovieDetailState {
+    private fun getStateFromResponse(movieDetailResponse: NetworkResponse<MovieDetailResponse, Throwable>): MovieDetailState {
         return when (movieDetailResponse) {
             is NetworkResponse.Success -> {
                 val response = movieDetailResponse.body
-                if (response != null && response.title.isNullOrEmpty().not()) {
+                if (response.title.isNullOrEmpty().not()) {
                     MovieDetailState.Loaded(
                         movieDetail = response.toMovieDetail()
                     )

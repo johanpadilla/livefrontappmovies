@@ -1,4 +1,4 @@
-package com.example.livefront_app_movies.di
+package com.example.livefront_app_movies.network
 
 import com.example.livefront_app_movies.BuildConfig
 import okhttp3.Interceptor

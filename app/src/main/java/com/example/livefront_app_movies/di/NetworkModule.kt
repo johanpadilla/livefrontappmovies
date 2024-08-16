@@ -1,6 +1,7 @@
 package com.example.livefront_app_movies.di
 
 import com.example.livefront_app_movies.BuildConfig
+import com.example.livefront_app_movies.network.AuthenticationInterceptor
 import com.example.livefront_app_movies.network.movie.MovieService
 import dagger.Module
 import dagger.Provides
