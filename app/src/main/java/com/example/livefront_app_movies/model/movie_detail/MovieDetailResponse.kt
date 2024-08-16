@@ -1,4 +1,4 @@
-package com.example.livefront_app_movies.model
+package com.example.livefront_app_movies.model.movie_detail
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass

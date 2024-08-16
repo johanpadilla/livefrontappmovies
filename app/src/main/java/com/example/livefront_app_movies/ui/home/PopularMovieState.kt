@@ -1,6 +1,6 @@
 package com.example.livefront_app_movies.ui.home
 
-import com.example.livefront_app_movies.model.Results
+import com.example.livefront_app_movies.model.popular_movie.Results
 import com.example.livefront_app_movies.utils.toFullPosterURL
 
 sealed class PopularMovieState {

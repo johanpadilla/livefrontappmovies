@@ -11,10 +11,9 @@ class AuthenticationInterceptor : Interceptor {
             .addHeader("accept", "application/json")
             .addHeader(
                 "Authorization",
-                BuildConfig.TOKEN
+                "Bearer ${BuildConfig.ACCESS_TOKEN}"
             )
             .build()
         return chain.proceed(newRequest)
     }
-
 }

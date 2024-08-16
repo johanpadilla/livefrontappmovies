@@ -1,6 +1,6 @@
 package com.example.livefront_app_movies.ui.details
 
-import com.example.livefront_app_movies.model.MovieDetailResponse
+import com.example.livefront_app_movies.model.movie_detail.MovieDetailResponse
 import com.example.livefront_app_movies.utils.toFullPosterURL
 
 sealed class MovieDetailState {

@@ -122,7 +122,7 @@ fun PopularMovieScreen(
                     is PopularMovieState.Error -> CenteredMessage(
                         modifier = Modifier.testTag("popular_movie_error_container"),
                         message = "${stringResource(id = R.string.error_text_message)} ${
-                            if (BuildConfig.TOKEN.isEmpty()) stringResource(
+                            if (BuildConfig.ACCESS_TOKEN.isEmpty()) stringResource(
                                 id = R.string.check_the_token_text
                             ) else ""
                         }"

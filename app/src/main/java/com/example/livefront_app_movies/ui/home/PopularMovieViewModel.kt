@@ -3,7 +3,7 @@ package com.example.livefront_app_movies.ui.home
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.livefront_app_movies.di.IoDispatcher
-import com.example.livefront_app_movies.model.PopularMovieResponse
+import com.example.livefront_app_movies.model.popular_movie.PopularMovieResponse
 import com.example.livefront_app_movies.network.movie.MovieService
 import com.example.livefront_app_movies.network.NetworkResponse
 import com.example.livefront_app_movies.network.utils.performApiCall

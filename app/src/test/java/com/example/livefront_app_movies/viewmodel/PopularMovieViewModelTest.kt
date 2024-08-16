@@ -1,8 +1,8 @@
 package com.example.livefront_app_movies.viewmodel
 
 import app.cash.turbine.test
-import com.example.livefront_app_movies.model.PopularMovieResponse
-import com.example.livefront_app_movies.model.Results
+import com.example.livefront_app_movies.model.popular_movie.PopularMovieResponse
+import com.example.livefront_app_movies.model.popular_movie.Results
 import com.example.livefront_app_movies.network.movie.MovieService
 import com.example.livefront_app_movies.ui.home.PopularMovieState
 import com.example.livefront_app_movies.ui.home.PopularMovieViewModel

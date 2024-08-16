@@ -1,7 +1,7 @@
 package com.example.livefront_app_movies.viewmodel
 
 import app.cash.turbine.test
-import com.example.livefront_app_movies.model.MovieDetailResponse
+import com.example.livefront_app_movies.model.movie_detail.MovieDetailResponse
 import com.example.livefront_app_movies.network.movie.MovieService
 import com.example.livefront_app_movies.ui.details.MovieDetail
 import com.example.livefront_app_movies.ui.details.MovieDetailState

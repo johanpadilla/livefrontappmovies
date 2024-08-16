@@ -9,6 +9,9 @@ plugins {
     alias(libs.plugins.ksp)
 }
 
+val properties = Properties()
+properties.load(project.rootProject.file("secret.properties").reader())
+
 android {
     namespace = "com.example.livefront_app_movies"
     compileSdk = 34
@@ -28,8 +31,6 @@ android {
 
 
     buildTypes {
-        val properties = Properties()
-        properties.load(project.rootProject.file("local.properties").reader())
         debug {
             isMinifyEnabled = false
 
@@ -37,7 +38,8 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-            buildConfigField("String", "TOKEN", properties.getProperty("token"))
+            buildConfigField("String", "ACCESS_TOKEN", properties.getProperty("ACCESS_TOKEN"))
+            buildConfigField("String", "API_URL", properties.getProperty("API_URL"))
 
         }
         release {
@@ -46,7 +48,8 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-            buildConfigField("String", "TOKEN", properties.getProperty("token"))
+            buildConfigField("String", "ACCESS_TOKEN", properties.getProperty("ACCESS_TOKEN"))
+            buildConfigField("String", "API_URL", properties.getProperty("API_URL"))
         }
 
     }

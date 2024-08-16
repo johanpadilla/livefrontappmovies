@@ -1,5 +1,6 @@
 package com.example.livefront_app_movies.di
 
+import com.example.livefront_app_movies.BuildConfig
 import com.example.livefront_app_movies.network.movie.MovieService
 import dagger.Module
 import dagger.Provides
@@ -15,7 +16,7 @@ import javax.inject.Singleton
 class NetworkModule {
 
     @Provides
-    fun provideBaseUrl(): String = "https://api.themoviedb.org/"
+    fun provideBaseUrl(): String = BuildConfig.API_URL
 
     @Provides
     fun authenticationInterceptor(): AuthenticationInterceptor = AuthenticationInterceptor()
