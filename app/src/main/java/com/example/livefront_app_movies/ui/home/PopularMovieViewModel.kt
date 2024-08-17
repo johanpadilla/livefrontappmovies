@@ -2,45 +2,38 @@ package com.example.livefront_app_movies.ui.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.livefront_app_movies.di.IoDispatcher
 import com.example.livefront_app_movies.model.popular_movie.PopularMovieRepository
 import com.example.livefront_app_movies.model.popular_movie.PopularMovieResponse
-import com.example.livefront_app_movies.network.movie.MovieService
 import com.example.livefront_app_movies.network.NetworkResponse
+import com.example.livefront_app_movies.ui.details.MovieDetailState
 import com.example.livefront_app_movies.ui.flow.makeRestartable
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 import kotlin.coroutines.CoroutineContext
 
 @HiltViewModel
 class PopularMovieViewModel @Inject constructor(
     private val repository: PopularMovieRepository,
-   private val ioDispatcher: CoroutineContext,
+    private val ioDispatcher: CoroutineContext,
 ) : ViewModel() {
+    private val _popularMovies = MutableStateFlow<PopularMovieState>(PopularMovieState.Loading)
+    val popularMovies: StateFlow<PopularMovieState> = _popularMovies.asStateFlow()
 
-    private val restarter = SharingStarted.WhileSubscribed(FIVE_SECONDS).makeRestartable()
 
-    val movies: StateFlow<PopularMovieState> by lazy {
-        flow {
-            emit(getStateFromResponse(repository.getPopularMovies(
-                mapOf(
-                    "language" to "en-US",
-                    "page" to "1"
-                )
-            )))
-        }.catch { emit(PopularMovieState.Empty) }
-            .flowOn(ioDispatcher)
-            .stateIn(
-                scope = viewModelScope,
-                started = restarter,
-                initialValue = PopularMovieState.Loading
-            )
+    fun getPopularMovies(page: Int = 1) {
+        viewModelScope.launch(ioDispatcher) {
+            val response = repository.getPopularMovies(page.toString())
+            _popularMovies.value = getStateFromResponse(response)
+        }
     }
 
 
@@ -52,7 +45,9 @@ class PopularMovieViewModel @Inject constructor(
                     PopularMovieState.Loaded(
                         currentPage = moviesResponse.body.page,
                         totalPages = moviesResponse.body.totalPages,
-                        movies = moviesResponse.body.results.map { it.toPopularMovie() })
+                        movies = moviesResponse.body.results.map { it.toPopularMovie() },
+                        isRefreshing = false
+                    )
                 } else PopularMovieState.Empty
             }
 
@@ -60,9 +55,13 @@ class PopularMovieViewModel @Inject constructor(
         }
     }
 
-    fun restart() = restarter.restart()
-
-    companion object {
-        private const val FIVE_SECONDS: Long = 5_000
+    fun refresh(onError: Boolean = false) {
+        if(onError) {
+            _popularMovies.value = PopularMovieState.Loading
+        } else {
+            _popularMovies.value =
+                (_popularMovies.value as PopularMovieState.Loaded).copy(isRefreshing = true)
+        }
+        getPopularMovies()
     }
 }

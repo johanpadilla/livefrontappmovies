@@ -14,7 +14,7 @@ properties.load(project.rootProject.file("secret.properties").reader())
 
 android {
     namespace = "com.example.livefront_app_movies"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.example.livefront_app_movies"

@@ -7,9 +7,8 @@ import androidx.activity.enableEdgeToEdge
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.toRoute
+import com.example.livefront_app_movies.navigation.Destinations
 import com.example.livefront_app_movies.ui.details.MovieDetailScreen
-import com.example.livefront_app_movies.ui.details.MovieDetailsScreen
 import com.example.livefront_app_movies.ui.home.PopularMovieScreen
 import com.example.livefront_app_movies.ui.theme.LivefrontappmoviesTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -24,14 +23,18 @@ class MainActivity : ComponentActivity() {
                 val navController = rememberNavController()
                 NavHost(
                     navController = navController,
-                    startDestination = PopularMovieScreen
+                    startDestination = Destinations.PopularMovie.route
                 ) {
-                    composable<PopularMovieScreen> {
-                        PopularMovieScreen(navController = navController)
+                    composable(Destinations.PopularMovie.route) {
+                        PopularMovieScreen(){
+                            navController.navigate("movie_detail/$it")
+                        }
                     }
-                    composable<MovieDetailsScreen> {
-                        val id = it.toRoute<MovieDetailsScreen>()
-                        MovieDetailScreen(navController, id.id)
+                    composable(Destinations.MovieDetail.route) {
+                        val movieId = it.arguments?.getString("id")
+                            ?.let(::requireNotNull)
+                            .orEmpty()
+                        MovieDetailScreen({navController.navigateUp()}, movieId)
                     }
                 }
             }

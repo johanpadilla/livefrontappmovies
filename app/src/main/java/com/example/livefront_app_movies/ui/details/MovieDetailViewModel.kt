@@ -2,10 +2,8 @@ package com.example.livefront_app_movies.ui.details
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.livefront_app_movies.di.IoDispatcher
 import com.example.livefront_app_movies.model.movie_detail.MovieDetailRepository
 import com.example.livefront_app_movies.model.movie_detail.MovieDetailResponse
-import com.example.livefront_app_movies.network.movie.MovieService
 import com.example.livefront_app_movies.network.NetworkResponse
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -38,8 +36,12 @@ class MovieDetailViewModel @Inject constructor(
         } else _details.value = MovieDetailState.Error
     }
 
-    fun onRefresh(movieId: String?) {
-        _details.value = MovieDetailState.Loading
+    fun onRefresh(movieId: String?, onError: Boolean = false) {
+        if(onError) {
+            _details.value = MovieDetailState.Loading
+        } else {
+            _details.value = (_details.value as MovieDetailState.Loaded).copy(isRefreshing = true)
+        }
         getMovieDetail(movieId)
     }
 
@@ -49,7 +51,7 @@ class MovieDetailViewModel @Inject constructor(
                 val response = movieDetailResponse.body
                 if (response.title.isNullOrEmpty().not()) {
                     MovieDetailState.Loaded(
-                        movieDetail = response.toMovieDetail()
+                        movieDetail = response.toMovieDetail(), isRefreshing = false
                     )
                 } else MovieDetailState.Empty
 

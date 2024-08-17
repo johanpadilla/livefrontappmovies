@@ -7,9 +7,9 @@ import javax.inject.Inject
 class PopularMovieRepositoryImpl @Inject constructor(private val remoteDataSource: MovieService) :
     PopularMovieRepository {
 
-    override suspend fun getPopularMovies(queryParam: Map<String, String>): NetworkResponse<PopularMovieResponse, Throwable> {
+    override suspend fun getPopularMovies(page: String): NetworkResponse<PopularMovieResponse, Throwable> {
         return try {
-            NetworkResponse.Success(remoteDataSource.getPopularMovies(queryParam))
+            NetworkResponse.Success(remoteDataSource.getPopularMovies(page))
         }
         catch (ex: Exception) {
             NetworkResponse.NetworkError(ex.cause)

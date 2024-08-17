@@ -4,5 +4,5 @@ import com.example.livefront_app_movies.network.NetworkResponse
 
 interface PopularMovieRepository {
 
-    suspend fun getPopularMovies(queryParam: Map<String, String>): NetworkResponse<PopularMovieResponse, Throwable>
+    suspend fun getPopularMovies(page: String): NetworkResponse<PopularMovieResponse, Throwable>
 }

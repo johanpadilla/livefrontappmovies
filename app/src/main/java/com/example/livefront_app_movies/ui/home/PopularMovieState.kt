@@ -8,7 +8,8 @@ sealed class PopularMovieState {
     data class Loaded(
         val currentPage: Int?,
         val totalPages: Int?,
-        val movies: List<PopularMovie>
+        val movies: List<PopularMovie>,
+        val isRefreshing: Boolean = false
     ) : PopularMovieState()
 
     data object Empty : PopularMovieState()
