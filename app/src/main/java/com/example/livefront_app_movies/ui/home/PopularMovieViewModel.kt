@@ -5,17 +5,10 @@ import androidx.lifecycle.viewModelScope
 import com.example.livefront_app_movies.model.popular_movie.PopularMovieRepository
 import com.example.livefront_app_movies.model.popular_movie.PopularMovieResponse
 import com.example.livefront_app_movies.network.NetworkResponse
-import com.example.livefront_app_movies.ui.details.MovieDetailState
-import com.example.livefront_app_movies.ui.flow.makeRestartable
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import kotlin.coroutines.CoroutineContext
