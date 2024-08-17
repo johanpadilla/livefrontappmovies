@@ -40,6 +40,7 @@ android {
             )
             buildConfigField("String", "ACCESS_TOKEN", properties.getProperty("ACCESS_TOKEN"))
             buildConfigField("String", "API_URL", properties.getProperty("API_URL"))
+            buildConfigField("String", "IMAGE_URL", properties.getProperty("IMAGE_URL"))
 
         }
         release {
@@ -50,6 +51,7 @@ android {
             )
             buildConfigField("String", "ACCESS_TOKEN", properties.getProperty("ACCESS_TOKEN"))
             buildConfigField("String", "API_URL", properties.getProperty("API_URL"))
+            buildConfigField("String", "IMAGE_URL", properties.getProperty("IMAGE_URL"))
         }
 
     }

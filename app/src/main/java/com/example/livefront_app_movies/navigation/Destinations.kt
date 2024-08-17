@@ -1,11 +1,11 @@
 package com.example.livefront_app_movies.navigation
 
-import kotlinx.serialization.Serializable
+object Destinations {
+    //Keys
+    const val MOVIE_DETAILS_SCREEN_KEY = "movieId"
 
-@Serializable
-sealed class Destinations(val route: String) {
-    @Serializable
-    data object PopularMovie: Destinations(route = "popular_movie")
-    @Serializable
-    data object MovieDetail: Destinations(route = "movie_detail/{id}")
+
+    //Screens
+    const val POPULAR_MOVIE_SCREEN = "popular-movie-screen"
+    const val MOVIE_DETAILS_SCREEN = "movie-details-screen}"
 }

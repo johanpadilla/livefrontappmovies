@@ -11,24 +11,38 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import kotlin.coroutines.CoroutineContext
 
 @HiltViewModel
 class PopularMovieViewModel @Inject constructor(
     private val repository: PopularMovieRepository,
-    private val ioDispatcher: CoroutineContext,
 ) : ViewModel() {
     private val _popularMovies = MutableStateFlow<PopularMovieState>(PopularMovieState.Loading)
     val popularMovies: StateFlow<PopularMovieState> = _popularMovies.asStateFlow()
 
-
-    fun getPopularMovies(page: Int = 1) {
-        viewModelScope.launch(ioDispatcher) {
-            val response = repository.getPopularMovies(page.toString())
+    /**
+     * Fetch the popular movies from the API.
+     */
+    fun getPopularMovies() {
+        viewModelScope.launch {
+            val response = repository.getPopularMovies()
             _popularMovies.value = getStateFromResponse(response)
         }
     }
 
+    /**
+     * Function to trigger the reload of the content.
+     * @param onError  (true) - if the refresh in on an error state it will change the PopularMovieState to Loading
+     * @param onError  (false) - the refresh is NOT an error state, it will just update the field isRefreshing from the Loaded State
+     */
+    fun refresh(onError: Boolean = false) {
+        if(onError) {
+            _popularMovies.value = PopularMovieState.Loading
+        } else {
+            _popularMovies.value =
+                (_popularMovies.value as PopularMovieState.Loaded).copy(isRefreshing = true)
+        }
+        getPopularMovies()
+    }
 
     private fun getStateFromResponse(moviesResponse: NetworkResponse<PopularMovieResponse, Throwable>): PopularMovieState {
         return when (moviesResponse) {
@@ -46,15 +60,5 @@ class PopularMovieViewModel @Inject constructor(
 
             else -> PopularMovieState.Error
         }
-    }
-
-    fun refresh(onError: Boolean = false) {
-        if(onError) {
-            _popularMovies.value = PopularMovieState.Loading
-        } else {
-            _popularMovies.value =
-                (_popularMovies.value as PopularMovieState.Loaded).copy(isRefreshing = true)
-        }
-        getPopularMovies()
     }
 }

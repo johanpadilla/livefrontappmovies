@@ -18,10 +18,12 @@ Android-Kotlin based application, which demonstrate knowledge of Android trends 
 
 ## Environment Variables
 
-To run this project, you will need to add the following environment variable to the local.properties file located in the root of the project.
+To run this project, you will need to create a file named `secret.properties` file into the root project and add the following environment variables.
 Ask for the token to the recruiter.
 
-`token=""`
+`ACCESS_TOKEN=""`
+`API_URL=""`
+`IMAGE_URL=""`
 
 
 ## Features

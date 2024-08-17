@@ -1,5 +1,6 @@
 package com.example.livefront_app_movies.utils
 
+import com.example.livefront_app_movies.BuildConfig
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.format
 import kotlinx.datetime.format.MonthNames
@@ -23,5 +24,5 @@ fun String.formatDateToMonthAndYear(): String {
 }
 
 object URL {
-    const val POSTER_URL = "https://image.tmdb.org/t/p/w500/"
+    const val POSTER_URL = BuildConfig.IMAGE_URL
 }

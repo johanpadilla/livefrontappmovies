@@ -57,22 +57,16 @@ import kotlinx.serialization.Serializable
 @Composable
 fun MovieDetailScreen(
     onBackClick: () -> Unit,
-    movieId: String?,
     viewModel: MovieDetailViewModel = hiltViewModel()
 ) {
     val movieDetailState by viewModel.detail.collectAsStateWithLifecycle()
     MovieDetailScreenContent(
         onBackClick = onBackClick,
         movieDetailState = movieDetailState,
-        movieId
-    ) { it, onError ->
+    ) { onError ->
         viewModel.onRefresh(
-            it,
             onError
         )
-    }
-    LaunchedEffect(Unit) {
-        viewModel.getMovieDetail(movieId)
     }
 }
 
@@ -81,8 +75,7 @@ fun MovieDetailScreen(
 private fun MovieDetailScreenContent(
     onBackClick: () -> Unit,
     movieDetailState: MovieDetailState,
-    movieId: String?,
-    onRefresh: (String?, Boolean) -> Unit
+    onRefresh: (Boolean) -> Unit
 ) {
     Scaffold(
         topBar = {
@@ -102,7 +95,7 @@ private fun MovieDetailScreenContent(
         Box(modifier = Modifier
             .padding(paddingValues)
             .fillMaxSize()) {
-            Content(movieDetailState = movieDetailState, movieId, onRefresh)
+            Content(movieDetailState = movieDetailState, onRefresh)
         }
     }
 }
@@ -112,13 +105,12 @@ private fun MovieDetailScreenContent(
 @Composable
 private fun Content(
     movieDetailState: MovieDetailState,
-    movieId: String?,
-    onRefresh: (String?, Boolean) -> Unit
+    onRefresh: (Boolean) -> Unit
 ) {
     when (movieDetailState) {
         is MovieDetailState.Loaded -> {
             PullToRefreshContainer(onRefresh = {
-                onRefresh(movieId, false)
+                onRefresh(false)
             },
                 modifier = Modifier.padding(horizontal = dimensionResource(id = R.dimen.smallHorizontalPadding)),
                 isRefreshing = movieDetailState.isRefreshing,
@@ -181,7 +173,7 @@ private fun Content(
         is MovieDetailState.Empty -> {
             PullToRefreshContainer(
                 isRefreshing = false,
-                onRefresh = { onRefresh(movieId, true) },
+                onRefresh = { onRefresh(true) },
                 content = {
                     CenteredMessage(message = stringResource(id = R.string.empty_text_message))
                 }
@@ -191,7 +183,7 @@ private fun Content(
         is MovieDetailState.Error -> {
             PullToRefreshContainer(
                 isRefreshing = false,
-                onRefresh = { onRefresh(movieId, true) },
+                onRefresh = { onRefresh(true) },
                 content = {
                     CenteredMessage(message = stringResource(id = R.string.error_text_message))
 
