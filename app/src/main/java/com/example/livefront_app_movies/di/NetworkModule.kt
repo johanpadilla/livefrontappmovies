@@ -1,7 +1,7 @@
 package com.example.livefront_app_movies.di
 
 import com.example.livefront_app_movies.BuildConfig
-import com.example.livefront_app_movies.network.AuthenticationInterceptor
+import com.example.livefront_app_movies.network.interceptors.AuthenticationInterceptor
 import com.example.livefront_app_movies.network.movie.MovieService
 import dagger.Module
 import dagger.Provides
@@ -10,28 +10,32 @@ import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
+import javax.inject.Named
 import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-class NetworkModule {
+object NetworkModule {
 
     @Provides
-    fun provideBaseUrl(): String = BuildConfig.API_URL
+    fun authenticationInterceptor(@Named("accessToken") accessToken: String): AuthenticationInterceptor =
+        AuthenticationInterceptor(accessToken)
+
 
     @Provides
-    fun authenticationInterceptor(): AuthenticationInterceptor = AuthenticationInterceptor()
+    fun provideOkHppClient(authenticationInterceptor: AuthenticationInterceptor) =
+        OkHttpClient.Builder()
+            .addNetworkInterceptor(authenticationInterceptor)
+            .build()
 
     @Provides
     @Singleton
     fun provideRetrofit(
-        baseUrl: String,
-        authenticationInterceptor: AuthenticationInterceptor
+        @Named("baseUrl") baseUrl: String,
+        okkHttpClient: OkHttpClient
     ): Retrofit = Retrofit.Builder()
         .client(
-            OkHttpClient.Builder()
-                .addNetworkInterceptor(authenticationInterceptor)
-                .build()
+            okkHttpClient
         )
         .baseUrl(baseUrl)
         .addConverterFactory(MoshiConverterFactory.create())
@@ -41,4 +45,16 @@ class NetworkModule {
     fun provideMovieService(retrofit: Retrofit): MovieService =
         retrofit.create(MovieService::class.java)
 
+}
+
+@Module
+@InstallIn(SingletonComponent::class)
+object UrlModule {
+    @Named("baseUrl")
+    @Provides
+    fun provideBaseUrl(): String = BuildConfig.API_URL
+
+    @Named("accessToken")
+    @Provides
+    fun provideAccessToken(): String = BuildConfig.ACCESS_TOKEN
 }

@@ -9,6 +9,9 @@ import androidx.compose.ui.res.dimensionResource
 import com.example.livefront_app_movies.R
 import com.example.livefront_app_movies.ui.home.PopularMovie
 
+/**
+ * Row which will render movie card items,
+ */
 @Composable
 fun MovieCardRow(movieList: List<PopularMovie>, onPopularMovieClicked: (String) -> Unit) {
     Row(

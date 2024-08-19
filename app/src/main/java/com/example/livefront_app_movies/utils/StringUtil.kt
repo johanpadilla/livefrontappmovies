@@ -6,6 +6,9 @@ import kotlinx.datetime.format
 import kotlinx.datetime.format.MonthNames
 import kotlinx.datetime.format.char
 
+/**
+ * Converts from a relative image URL to an absolute path
+ */
 fun String.toFullPosterURL() = "${URL.POSTER_URL}$this"
 
 /**

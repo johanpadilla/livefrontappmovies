@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.livefront_app_movies.model.movie_detail.MovieDetailRepository
 import com.example.livefront_app_movies.model.movie_detail.MovieDetailResponse
-import com.example.livefront_app_movies.navigation.Destinations
+import com.example.livefront_app_movies.navigation.Argument
 import com.example.livefront_app_movies.network.NetworkResponse
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -23,7 +23,7 @@ class MovieDetailViewModel @Inject constructor(
     val detail: StateFlow<MovieDetailState> = _details.asStateFlow()
 
     init {
-        val movieId = savedStateHandle.get<String>(Destinations.MOVIE_DETAILS_SCREEN_KEY)
+        val movieId = savedStateHandle.get<String>(Argument.MOVIE_ID_KEY)
         getMovieDetail(movieId)
     }
 
@@ -53,7 +53,7 @@ class MovieDetailViewModel @Inject constructor(
         } else {
             _details.value = (_details.value as MovieDetailState.Loaded).copy(isRefreshing = true)
         }
-        getMovieDetail(savedStateHandle.get<String>(Destinations.MOVIE_DETAILS_SCREEN_KEY))
+        getMovieDetail(savedStateHandle.get<String>(Argument.MOVIE_ID_KEY))
     }
 
     private fun getStateFromResponse(movieDetailResponse: NetworkResponse<MovieDetailResponse, Throwable>): MovieDetailState {

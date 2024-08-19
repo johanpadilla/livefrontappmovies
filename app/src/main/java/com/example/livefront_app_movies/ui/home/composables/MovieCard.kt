@@ -7,6 +7,9 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.livefront_app_movies.ui.home.PopularMovie
 
+/**
+ * Card composable which wraps the image of the movie.
+ */
 @Composable
 fun MovieCard(popularMovie: PopularMovie, onPopularMovieClick: (String) -> Unit) {
     Card(onClick = { onPopularMovieClick.invoke(popularMovie.id.toString()) }) {
