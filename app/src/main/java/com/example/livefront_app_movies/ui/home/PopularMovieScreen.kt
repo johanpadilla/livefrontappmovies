@@ -1,9 +1,13 @@
 package com.example.livefront_app_movies.ui.home
 
+import android.content.res.Configuration
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -11,16 +15,17 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.livefront_app_movies.BuildConfig
 import com.example.livefront_app_movies.R
-import com.example.livefront_app_movies.ui.home.composables.MovieCardRow
+import com.example.livefront_app_movies.ui.home.composables.MovieCard
 import com.example.livefront_app_movies.ui.util.CenteredMessage
 import com.example.livefront_app_movies.ui.util.PullToRefreshContainer
 
@@ -37,10 +42,13 @@ fun PopularMovieScreen(
     onPopularMovieClick: (String) -> Unit
 ) {
     val moviesState by viewModel.popularMovies.collectAsStateWithLifecycle(lifecycle = LocalLifecycleOwner.current.lifecycle)
+    val isLandScapeMode =
+        LocalConfiguration.current.orientation == Configuration.ORIENTATION_LANDSCAPE
 
     PopularMovieScreenContent(
         movieState = moviesState,
-        onPopularMovieClick = onPopularMovieClick
+        onPopularMovieClick = onPopularMovieClick,
+        isLandScapeMode
     ) { onError -> viewModel.refresh(onError) }
     LaunchedEffect(Unit) {
         viewModel.getPopularMovies()
@@ -52,6 +60,7 @@ fun PopularMovieScreen(
 private fun PopularMovieScreenContent(
     movieState: PopularMovieState,
     onPopularMovieClick: (String) -> Unit,
+    isLandScapeMode: Boolean,
     onRefresh: (Boolean) -> Unit
 ) {
     Scaffold(
@@ -65,7 +74,49 @@ private fun PopularMovieScreenContent(
 
         ) { paddingValues ->
         Box(modifier = Modifier.padding(paddingValues)) {
-            Content(movieState, onPopularMovieClick, onRefresh)
+            Content(movieState, isLandScapeMode, onPopularMovieClick, onRefresh)
+        }
+    }
+}
+
+@Composable
+private fun LandscapeGrid(movies: List<PopularMovie>, onPopularMovieClick: (String) -> Unit) {
+    LazyVerticalGrid(
+        modifier = Modifier.padding(dimensionResource(id = R.dimen.smallHorizontalPadding)),
+        columns = GridCells.Adaptive(dimensionResource(id = R.dimen.landscapeMinCellsSize)),
+        verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.smallHorizontalPadding)),
+        horizontalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.smallHorizontalPadding))
+    ) {
+        items(
+            movies.size
+        ) {
+            MovieCard(
+                modifier = Modifier
+                    .wrapContentSize()
+                    .height(dimensionResource(id = R.dimen.landscapeCardImageHeight)),
+                popularMovie = movies[it],
+                onPopularMovieClick = onPopularMovieClick
+            )
+        }
+
+    }
+}
+
+@Composable
+private fun PortraitGrid(movies: List<PopularMovie>, onPopularMovieClick: (String) -> Unit) {
+    LazyVerticalGrid(
+        columns = GridCells.Fixed(POPULAR_MOVIE_COLUMNS),
+        verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.smallHorizontalPadding)),
+        horizontalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.smallHorizontalPadding))
+    ) {
+        items(
+            movies.size
+        ) {
+            MovieCard(
+                modifier = Modifier.wrapContentSize(),
+                popularMovie = movies[it],
+                onPopularMovieClick = onPopularMovieClick
+            )
         }
     }
 }
@@ -74,26 +125,27 @@ private fun PopularMovieScreenContent(
 @Composable
 private fun Content(
     movieState: PopularMovieState,
+    isLandScapeMode: Boolean,
     onPopularMovieClick: (String) -> Unit,
     onRefresh: (onError: Boolean) -> Unit
 ) {
     when (movieState) {
         is PopularMovieState.Loaded -> {
             PullToRefreshContainer(
+                modifier = Modifier.testTag("popular_movie_container"),
                 isRefreshing = movieState.isRefreshing,
                 onRefresh = { onRefresh(false) },
                 content = {
-                    LazyColumn(
-                        modifier = Modifier
-                            .fillMaxSize(),
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        val chunkedList = movieState.movies.chunked(POPULAR_MOVIE_COLUMNS)
-                        items(chunkedList.size) { index ->
-                            MovieCardRow(
-                                movieList = chunkedList[index]
-                            ) { movieId -> onPopularMovieClick(movieId) }
-                        }
+                    if (isLandScapeMode.not()) {
+                        PortraitGrid(
+                            movies = movieState.movies,
+                            onPopularMovieClick = onPopularMovieClick
+                        )
+                    } else {
+                        LandscapeGrid(
+                            movies = movieState.movies,
+                            onPopularMovieClick = onPopularMovieClick
+                        )
                     }
                 }
             )
@@ -116,6 +168,7 @@ private fun Content(
 
         is PopularMovieState.Error -> {
             PullToRefreshContainer(
+                modifier = Modifier.testTag("test"),
                 isRefreshing = false,
                 onRefresh = { onRefresh(true) },
                 content = {

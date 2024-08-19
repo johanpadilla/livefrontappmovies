@@ -5,4 +5,7 @@
     <dimen name="smallVerticalPadding">8dp</dimen>
 
     <dimen name="rowImageHeight">48dp</dimen>
+    <dimen name="landscapeCardImageHeight">250.dp</dimen>
+    <dimen name="landscapeMinCellsSize">128.dp</dimen>
+    <dimen name="landscapeMovieDetailSpacing">140.dp</dimen>
 </resources>
