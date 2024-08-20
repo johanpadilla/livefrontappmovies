@@ -10,6 +10,7 @@ Android-Kotlin based application, which demonstrate knowledge of Android trends 
 - Coroutines & Flows.
 - Networking using Retrofit.
 - Unit testing.
+- UI Testing
 - Coil: Image Loading Library
 - Extension functions.
 
@@ -19,7 +20,7 @@ Android-Kotlin based application, which demonstrate knowledge of Android trends 
 ## Environment Variables
 
 To run this project, you will need to create a file named `secret.properties` file into the root project and add the following environment variables.
-Ask for the token to the recruiter.
+Ask for the values to the recruiter.
 
 `ACCESS_TOKEN=""`
 `API_URL=""`
@@ -32,13 +33,15 @@ Ask for the token to the recruiter.
 - Pull to refresh.
 - Network Image Loading.
 - State management.
-- Portrait mode only.
+- Portrait|Landscape modes.
 
 Using the https://api.themoviedb.org/ service to fetch data.
 
 
 
 ## Screenshots
+Portrait mode:
+
 Home Screen, listing the top popular movies:
 
 ![Popular movies list](screenshots/light_home.png)
@@ -46,3 +49,13 @@ Home Screen, listing the top popular movies:
 Details Movie Screen, information related to the movie:
 
 ![Details movie](screenshots/light_details.png)
+
+
+Landscape mode:
+
+Home Screen, listing the top popular movies:
+![Popular movies list](screenshots/light_landscape_list.png)
+
+Details Movie Screen, information related to the movie:
+
+![Details movie](screenshots/light_landscape_detail.png)
