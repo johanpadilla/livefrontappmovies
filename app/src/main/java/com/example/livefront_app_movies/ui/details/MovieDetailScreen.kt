@@ -32,6 +32,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusEvent
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
@@ -212,6 +213,7 @@ private fun Content(
 
         is MovieDetailState.Error -> {
             PullToRefreshContainer(
+                modifier = Modifier.testTag("popular_movie_error_container"),
                 isRefreshing = false,
                 onRefresh = { onRefresh(true) },
                 content = {

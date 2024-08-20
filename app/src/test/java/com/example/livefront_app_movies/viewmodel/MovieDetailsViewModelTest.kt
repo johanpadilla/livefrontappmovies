@@ -6,7 +6,7 @@ import com.example.livefront_app_movies.ui.details.MovieDetailViewModel
 import com.example.livefront_app_movies.CoroutineRuleDispatcher
 import com.example.livefront_app_movies.model.movie_detail.MovieDetailRepository
 import com.example.livefront_app_movies.model.movie_detail.MovieDetailResponse
-import com.example.livefront_app_movies.navigation.Destinations
+import com.example.livefront_app_movies.navigation.Argument
 import com.example.livefront_app_movies.network.NetworkResponse
 import com.example.livefront_app_movies.ui.details.MovieDetail
 import com.example.livefront_app_movies.ui.details.MovieDetailState
@@ -31,7 +31,7 @@ class MovieDetailsViewModelTest {
 
     @Test
     fun initialStateIsLoading() = runTest {
-        whenever(savedStateHandle.get<String>(Destinations.MOVIE_DETAILS_SCREEN_KEY)).thenReturn(
+        whenever(savedStateHandle.get<String>(Argument.MOVIE_ID_KEY)).thenReturn(
             MOVIE_ID
         )
 
@@ -43,7 +43,7 @@ class MovieDetailsViewModelTest {
 
     @Test
     fun nullMOVIE_IDShouldBeErrorState() = runTest {
-        whenever(savedStateHandle.get<String>(Destinations.MOVIE_DETAILS_SCREEN_KEY)).thenReturn(
+        whenever(savedStateHandle.get<String>(Argument.MOVIE_ID_KEY)).thenReturn(
             null
         )
 
@@ -56,7 +56,7 @@ class MovieDetailsViewModelTest {
 
     @Test
     fun withMOVIE_IDButNullBodyResponseShouldBeEmptyState() = runTest {
-        whenever(savedStateHandle.get<String>(Destinations.MOVIE_DETAILS_SCREEN_KEY)).thenReturn(
+        whenever(savedStateHandle.get<String>(Argument.MOVIE_ID_KEY)).thenReturn(
             MOVIE_ID
         )
 
@@ -80,7 +80,7 @@ class MovieDetailsViewModelTest {
     @Test
     fun withMOVIE_IDShouldBeLoadedState() = runTest {
         val title = "title"
-        whenever(savedStateHandle.get<String>(Destinations.MOVIE_DETAILS_SCREEN_KEY)).thenReturn(
+        whenever(savedStateHandle.get<String>(Argument.MOVIE_ID_KEY)).thenReturn(
             MOVIE_ID
         )
 
@@ -118,7 +118,7 @@ class MovieDetailsViewModelTest {
     fun withRestartNoResultsShouldBeEmptyState() = runTest {
         val popularMovieResponse = MovieDetailResponse()
 
-        whenever(savedStateHandle.get<String>(Destinations.MOVIE_DETAILS_SCREEN_KEY)).thenReturn(
+        whenever(savedStateHandle.get<String>(Argument.MOVIE_ID_KEY)).thenReturn(
             MOVIE_ID
         )
 
@@ -152,7 +152,7 @@ class MovieDetailsViewModelTest {
             title = title
         )
 
-        whenever(savedStateHandle.get<String>(Destinations.MOVIE_DETAILS_SCREEN_KEY)).thenReturn(
+        whenever(savedStateHandle.get<String>(Argument.MOVIE_ID_KEY)).thenReturn(
             MOVIE_ID
         )
 
@@ -181,7 +181,7 @@ class MovieDetailsViewModelTest {
     @Test
     fun errorMovieDetailShouldBeErrorState() = runTest {
 
-        whenever(savedStateHandle.get<String>(Destinations.MOVIE_DETAILS_SCREEN_KEY)).thenReturn(
+        whenever(savedStateHandle.get<String>(Argument.MOVIE_ID_KEY)).thenReturn(
             MOVIE_ID
         )
 

@@ -25,13 +25,15 @@ mockk = "1.13.12"
 turbine = "1.1.0"
 hiltNavigation = "1.2.0"
 ksp = "2.0.0-1.0.24"
-
+okhttp-espresso = "1.0.0"
+testCore = "1.6.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
+androidx-test-core = {group = "androidx.test", name = "core-ktx", version.ref = "testCore"}
 androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx" }
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }
 androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }
@@ -67,6 +69,7 @@ mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
 mockk-android = { module = "io.mockk:mockk-android", version.ref = "mockk" }
 turbine = {module = "app.cash.turbine:turbine", version.ref = "turbine"}
 dagger-hilt-android-testing = { module = "com.google.dagger:hilt-android-testing", version.ref = "hiltVersion" }
+okhttp-espresso = { module= "com.jakewharton.espresso:okhttp3-idling-resource", version.ref = "okhttp-espresso"}
 
 
 [plugins]
