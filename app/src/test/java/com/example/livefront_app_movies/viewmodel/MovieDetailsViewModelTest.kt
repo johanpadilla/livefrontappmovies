@@ -19,7 +19,7 @@ import org.mockito.kotlin.whenever
 
 class MovieDetailsViewModelTest {
 
-    private var repository: MovieDetailRepository = mock()
+    private val repository: MovieDetailRepository = mock()
     private val savedStateHandle: SavedStateHandle = mock()
 
     private lateinit var viewModel: MovieDetailViewModel
