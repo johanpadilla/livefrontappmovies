@@ -41,7 +41,7 @@ android {
             buildConfigField("String", "ACCESS_TOKEN", properties.getProperty("ACCESS_TOKEN"))
             buildConfigField("String", "API_URL", properties.getProperty("API_URL"))
             buildConfigField("String", "IMAGE_URL", properties.getProperty("IMAGE_URL"))
-
+            resValue("string", "clear_text_config","true")
         }
         release {
             isMinifyEnabled = false
@@ -52,6 +52,7 @@ android {
             buildConfigField("String", "ACCESS_TOKEN", properties.getProperty("ACCESS_TOKEN"))
             buildConfigField("String", "API_URL", properties.getProperty("API_URL"))
             buildConfigField("String", "IMAGE_URL", properties.getProperty("IMAGE_URL"))
+            resValue("string", "clear_text_config","false")
         }
 
     }
@@ -120,6 +121,9 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
+    androidTestImplementation(libs.okhttp.mockwebserver)
+    androidTestImplementation(libs.okhttp.espresso)
+    androidTestImplementation(libs.androidx.test.core)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 }
